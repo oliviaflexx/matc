@@ -33,6 +33,12 @@ import { showAnnouncementRouter } from "./routes/announcements/show";
 import { viewAnnouncementsRouter } from "./routes/announcements/index";
 import { deleteAnnouncementRouter } from "./routes/announcements/delete";
 
+import { createSyllabusRouter } from "./routes/syllabi/create";
+import { editSyllabusRouter } from "./routes/syllabi/edit";
+import { showSyllabusRouter } from "./routes/syllabi/show";
+import { viewSyllabiRouter } from "./routes/syllabi/index";
+import { deleteSyllabusRouter } from "./routes/syllabi/delete";
+
 import cors from "cors";
 import cookieSession from "cookie-session";
 import { NotFoundError, errorHandler } from "./services/errors";
@@ -87,6 +93,12 @@ app.use(editAnnouncementRouter);
 app.use(showAnnouncementRouter);
 app.use(viewAnnouncementsRouter);
 app.use(deleteAnnouncementRouter);
+
+app.use(createSyllabusRouter);
+app.use(editSyllabusRouter);
+app.use(showSyllabusRouter);
+app.use(viewSyllabiRouter);
+app.use(deleteSyllabusRouter);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 
