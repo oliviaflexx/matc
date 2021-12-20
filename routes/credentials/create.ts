@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { validateRequest, authorization } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -9,18 +9,20 @@ import {
 } from "../../services/errors";
 
 import { Credential } from "../../models/credential";
+import { currentUser } from "../../services/middleware";
 
 const router = express.Router();
 
 // create new election
 router.post(
   "/api/credentials/",
+  authorization,
   [
     body("title").notEmpty().withMessage("You must supply a title"),
     body("url").notEmpty().withMessage("You must supply a url"),
   ],
   validateRequest,
-  requireAuth,
+
   async (req: Request, res: Response) => {
     const { title, url } = req.body;
 
@@ -28,7 +30,7 @@ router.post(
 
     await credential.save();
 
-    res.send(credential);
+    res.status(201).send(credential);
   }
 );
 

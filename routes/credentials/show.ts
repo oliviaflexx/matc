@@ -12,7 +12,7 @@ import { Credential } from "../../models/credential";
 
 const router = express.Router();
 
-// show election
+// show credential
 router.get(
   "/api/credentials/:id",
   async (req: Request, res: Response) => {
@@ -20,6 +20,9 @@ router.get(
 
     const credential = await Credential.findById(id);
 
+    if (!credential) {
+      throw new NotFoundError();
+    }
     res.send(credential);
 
   }

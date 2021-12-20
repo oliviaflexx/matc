@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { validateRequest, requireAuth, authorization } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -13,9 +13,9 @@ import { Credential } from "../../models/credential";
 const router = express.Router();
 
 // create new election
-router.put(
+router.delete(
   "/api/credentials/:id",
-  requireAuth,
+  authorization,
   async (req: Request, res: Response) => {
     const { id } = req.params;
 

@@ -1,4 +1,5 @@
 import { ValidationError } from "express-validator";
+import { Request, Response, NextFunction } from "express";
 
 export abstract class CustomError extends Error {
   abstract statusCode: number;
@@ -70,3 +71,20 @@ export class RequestValidationError extends CustomError {
     });
   }
 }
+
+
+export const errorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (err instanceof CustomError) {
+    return res.status(err.statusCode).send({ errors: err.serializeErrors() });
+  }
+
+  console.log(err);
+  res.status(400).send({
+    errors: [{ message: "Something went wrong" }],
+  });
+};

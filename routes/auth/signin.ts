@@ -38,7 +38,7 @@ router.post(
     }
 
     // Generate JWT
-    const userJwt = jwt.sign(
+    const token = jwt.sign(
       {
         id: existingUser.id,
         email: existingUser.email,
@@ -47,12 +47,25 @@ router.post(
       process.env.JWT_KEY!
     );
 
-    // Store it on session object
-    req.session = {
-      jwt: userJwt,
-    };
+    // // Store it on session object
+    // req.session = {
+    //   jwt: userJwt,
+    // };
 
-    res.status(200).send(existingUser);
+    // req.currentUser = {
+    //   id: existingUser.id,
+    //   email: existingUser.email,
+    //   name: existingUser.name,
+    // };
+
+    // res.status(200).send(existingUser);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      })
+      .status(200)
+      .send(existingUser);
   }
 );
 

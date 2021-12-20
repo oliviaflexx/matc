@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { validateRequest, requireAuth, authorization } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -15,16 +15,17 @@ const router = express.Router();
 // show new meeting
 router.put(
   "/api/meetings/:id",
+  authorization,
   [
     body("date").notEmpty().withMessage("You must supply a date"),
   ],
   validateRequest,
-  requireAuth,
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { date, minutes, attendance, agenda } = req.body;
 
     const meeting = await Meeting.findById(id);
+ 
 
     if (!meeting) {
         throw new NotFoundError();
@@ -32,10 +33,10 @@ router.put(
 
     meeting.date = date;
     meeting.minutes = minutes;
+
     meeting.attendance = attendance;
     meeting.agenda = agenda;
-
-    await meeting.save()
+    await meeting.save();
 
     res.send(meeting);
 

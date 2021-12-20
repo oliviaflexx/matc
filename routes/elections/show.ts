@@ -20,6 +20,9 @@ router.get(
 
     const election = await Election.findById(id);
 
+    if (!election) {
+      throw new NotFoundError();
+    }
     res.send(election);
 
   }

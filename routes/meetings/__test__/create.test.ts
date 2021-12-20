@@ -1,48 +1,46 @@
 import request from "supertest";
-import { app } from "../../../index";
+import { app } from "../../../app";
 
 it("returns a 201 on successful meeting creation", async () => {
     const cookie = await global.signin();
-  const response = await request(app)
-    .post("/api/meetings/")
-    .set("Cookie", cookie)
-    .send({
-      date: new Date(11 / 18 / 1999),
-      minutes: "google.docs.com",
-      attendance: "google.docs.com",
-      agenda: "",
-    })
-    .expect(201);
+    const response = await request(app)
+      .post("/api/meetings/")
+      .set("Cookie", cookie)
+      .send({
+        date: '2017-06-01',
+        minutes: "google.docs.com",
+        attendance: "google.docs.com",
+        agenda: "",
+      })
+      .expect(201);
 
-    console.log(response);
+    expect(response.body.minutes).toEqual("google.docs.com");
 });
 
 it("it doesn't allow unsigned in users to create meeting", async () => {
   const response = await request(app)
     .post("/api/meetings/")
     .send({
-      date: new Date(11 / 18 / 1999),
+      date: "2017-06-01",
       minutes: "google.docs.com",
       attendance: "google.docs.com",
       agenda: "",
     })
     .expect(401);
 
-  console.log(response);
 });
 
 it("it returns error if date is incorrect or not provided", async () => {
+  const cookie = await global.signin();
   const response = await request(app)
     .post("/api/meetings/")
+    .set("Cookie", cookie)
     .send({
-      date: "11/18/1999",
+      date: "",
       minutes: "google.docs.com",
       attendance: "google.docs.com",
       agenda: "",
     })
     .expect(400);
 
-  console.log(response);
 });
-
-it("returns correct meeting after creation", async () => {});

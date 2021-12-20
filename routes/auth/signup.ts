@@ -22,7 +22,7 @@ router.post(
   async (req: Request, res: Response) => {
     const { email, password, name } = req.body;
 
-    console.log(req.body);
+
     const existingUserEmail = await User.findOne({ email });
 
     if (existingUserEmail) {
@@ -39,7 +39,7 @@ router.post(
     await user.save();
 
     // Generate JWT
-    const userJwt = jwt.sign(
+    const token = jwt.sign(
       {
         id: user.id,
         email: user.email,
@@ -48,12 +48,28 @@ router.post(
       process.env.JWT_KEY!
     );
 
-    // Store it on session object
-    req.session = {
-      jwt: userJwt,
-    };
+    // // console.log(userJwt);
 
-    res.status(201).send(user);
+    // // Store it on session object
+    // req.session = {
+    //   jwt: userJwt,
+    // };
+
+    // console.log(req.session.jwt);
+    // req.currentUser = {
+    //   id: user.id,
+    //   email: user.email,
+    //   name: user.name,
+    // };
+
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      })
+      .status(201)
+      .send(user);
+    // res.status(201).send(user);
   }
 );
 

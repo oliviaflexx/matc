@@ -23,19 +23,17 @@ export const currentUser = (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.session?.jwt) {
+  const token = req.cookies.access_token;
+  if (!token) {
     return next();
   }
-
   try {
-    const payload = jwt.verify(
-      req.session.jwt,
-      process.env.JWT_KEY!
-    ) as UserPayload;
-    req.currentUser = payload;
-  } catch (err) {}
-
-  next();
+    const data = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
+    req.currentUser = data;
+    return next();
+  } catch {
+    return next();
+  }
 };
 
 export const requireAuth = (
@@ -62,4 +60,18 @@ export const validateRequest = (
   }
 
   next();
+};
+
+export const authorization = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.cookies.access_token;
+  if (!token) {
+    throw new NotAuthorizedError();
+  }
+  try {
+    const data = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;;
+    req.currentUser = data;
+    return next();
+  } catch {
+    throw new NotAuthorizedError();
+  }
 };
