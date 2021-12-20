@@ -45,6 +45,12 @@ import { showEventRouter } from "./routes/events/show";
 import { viewEventsRouter } from "./routes/events/index";
 import { deleteEventRouter } from "./routes/events/delete";
 
+import { createFacultyRouter } from "./routes/faculty/create";
+import { editFacultyRouter } from "./routes/faculty/edit";
+import { showFacultyRouter } from "./routes/faculty/show";
+import { viewFacultyRouter } from "./routes/faculty/index";
+import { deleteFacultyRouter } from "./routes/faculty/delete";
+
 import { NotFoundError, errorHandler } from "./services/errors";
 import cookieParser from "cookie-parser";
 
@@ -109,6 +115,12 @@ app.use(editEventRouter);
 app.use(showEventRouter);
 app.use(viewEventsRouter);
 app.use(deleteEventRouter);
+
+app.use(createFacultyRouter);
+app.use(editFacultyRouter);
+app.use(showFacultyRouter);
+app.use(viewFacultyRouter);
+app.use(deleteFacultyRouter);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 
