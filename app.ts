@@ -27,6 +27,12 @@ import { showCredentialRouter } from "./routes/credentials/show";
 import { viewCredentialsRouter } from "./routes/credentials/index";
 import { deleteCredentialRouter } from "./routes/credentials/delete";
 
+import { createAnnouncementRouter } from "./routes/announcements/create";
+import { editAnnouncementRouter } from "./routes/announcements/edit";
+import { showAnnouncementRouter } from "./routes/announcements/show";
+import { viewAnnouncementsRouter } from "./routes/announcements/index";
+import { deleteAnnouncementRouter } from "./routes/announcements/delete";
+
 import cors from "cors";
 import cookieSession from "cookie-session";
 import { NotFoundError, errorHandler } from "./services/errors";
@@ -75,6 +81,12 @@ app.use(editCredentialRouter);
 app.use(showCredentialRouter);
 app.use(viewCredentialsRouter);
 app.use(deleteCredentialRouter);
+
+app.use(createAnnouncementRouter);
+app.use(editAnnouncementRouter);
+app.use(showAnnouncementRouter);
+app.use(viewAnnouncementsRouter);
+app.use(deleteAnnouncementRouter);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 
