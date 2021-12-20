@@ -39,8 +39,12 @@ import { showSyllabusRouter } from "./routes/syllabi/show";
 import { viewSyllabiRouter } from "./routes/syllabi/index";
 import { deleteSyllabusRouter } from "./routes/syllabi/delete";
 
-import cors from "cors";
-import cookieSession from "cookie-session";
+import { createEventRouter } from "./routes/events/create";
+import { editEventRouter } from "./routes/events/edit";
+import { showEventRouter } from "./routes/events/show";
+import { viewEventsRouter } from "./routes/events/index";
+import { deleteEventRouter } from "./routes/events/delete";
+
 import { NotFoundError, errorHandler } from "./services/errors";
 import cookieParser from "cookie-parser";
 
@@ -99,6 +103,12 @@ app.use(editSyllabusRouter);
 app.use(showSyllabusRouter);
 app.use(viewSyllabiRouter);
 app.use(deleteSyllabusRouter);
+
+app.use(createEventRouter);
+app.use(editEventRouter);
+app.use(showEventRouter);
+app.use(viewEventsRouter);
+app.use(deleteEventRouter);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 
