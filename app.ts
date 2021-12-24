@@ -53,6 +53,7 @@ import { deleteFacultyRouter } from "./routes/faculty/delete";
 
 import { NotFoundError, errorHandler } from "./services/errors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 let app = express();
 app.use(cookieParser());
@@ -62,7 +63,7 @@ app.set("trust proxy", true);
 
 app.use(json());
 
-// app.use(cors());
+app.use(cors());
 
 // console.log(process.env.NODE_ENV);
 

@@ -1,4 +1,3 @@
-// title and url
 //title and url
 import mongoose from "mongoose";
 
