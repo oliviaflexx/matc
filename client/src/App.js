@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Elections from "./pages/department/Elections";
 import Signin from "./pages/admin/Signin";
+import Signout from "./pages/admin/Signout";
 
 function App() {
     const [user, setUser] = useState("");
@@ -57,8 +58,12 @@ function App() {
       <Routes>
         <Route path="department/meetings" element={<Meetings user={user} />} />
         {/* <Route path="meetings" element={<Meetings user={{id: "123"}} />} /> */}
-        <Route path="department/elections" element={<Elections user={user} />} />
+        <Route
+          path="department/elections"
+          element={<Elections user={user} />}
+        />
         <Route path="admin/signin" element={<Signin user={user} />} />
+        <Route path="admin/signout" element={<Signout user={user} />} />
       </Routes>
     </BrowserRouter>
   );
