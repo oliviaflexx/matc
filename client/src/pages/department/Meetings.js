@@ -1,12 +1,12 @@
 import { useMediaQuery } from "react-responsive";
 import Moment from "react-moment";
 import ArticleIcon from "@mui/icons-material/Article";
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState, useEffect} from "react";
 import { Alert, Button, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import CreateMeeting from "./Create-Meeting";
-import EditMeeting from "./Edit-Meeting";
+import CreateMeeting from "../../components/Create-Meeting";
+import EditMeeting from "../../components/Edit-Meeting";
 
 const Meetings = ({user}) => {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });

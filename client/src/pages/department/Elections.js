@@ -1,12 +1,12 @@
 import { useMediaQuery } from "react-responsive";
 import Moment from "react-moment";
 import ArticleIcon from "@mui/icons-material/Article";
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
 import { Alert, Button, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import CreateElection from "./Create-Election";
-import EditElection from "./Edit-Election";
+import CreateElection from "../../components/Create-Election";
+import EditElection from "../../components/Edit-Election";
 
 const Elections = ({user}) => {
   const [elections, setElections] = useState([]);

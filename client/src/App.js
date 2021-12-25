@@ -2,10 +2,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import { axiosInstance } from "./config";
 import { Routes, Route, useParams } from "react-router-dom";
-import Meetings from "./components/Meetings";
+import Meetings from "./pages/department/Meetings";
 import { BrowserRouter } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Elections from "./components/Elections";
+import Elections from "./pages/department/Elections";
+import Signin from "./pages/admin/Signin";
 
 function App() {
     const [user, setUser] = useState("");
@@ -54,9 +55,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="meetings" element={<Meetings user={user} />} />
+        <Route path="department/meetings" element={<Meetings user={user} />} />
         {/* <Route path="meetings" element={<Meetings user={{id: "123"}} />} /> */}
-        <Route path="elections" element={<Elections user={user} />} />
+        <Route path="department/elections" element={<Elections user={user} />} />
+        <Route path="admin/signin" element={<Signin user={user} />} />
       </Routes>
     </BrowserRouter>
   );
