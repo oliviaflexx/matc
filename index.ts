@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 import mongoose from "mongoose";
 import { app } from "./app";
-
+import { User } from "./models/user";
 
 const PORT = process.env.PORT || 8000;
 
@@ -30,6 +30,15 @@ const start = async () => {
   for (let collection of collections) {
     await collection.deleteMany({});
   }
+
+  // TESTING PURPOSES
+    const user = User.build({
+      email: "oliviaflexx@gmail.com",
+      password: "mm7373922",
+      name: "oliviaflexx",
+    });
+
+    await user.save();
 
   app.listen(PORT, () => {
     console.log("Listening on port 8000!!!!!!!!");

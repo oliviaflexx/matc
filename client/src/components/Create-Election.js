@@ -24,7 +24,7 @@ const CreateElection = ({ elections, setCreate }) => {
     };
 
 return (
-  <div className="file-container">
+  <div className="file-container column">
     <h2>New election</h2>
     {errors.map((error) => {
       return (
@@ -50,7 +50,7 @@ return (
       label="Title"
       onChange={(e) => setTitle(e.target.value)}
       defaultValue={title}
-      autoComplete={false}
+ 
     ></TextField>
     <TextField
       sx={{
@@ -60,7 +60,7 @@ return (
       id="input-text"
       label="Election Document URL"
       onChange={(e) => setUrl(e.target.value)}
-      autoComplete={false}
+     
     ></TextField>
 
     <Button

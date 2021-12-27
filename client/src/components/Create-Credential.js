@@ -1,34 +1,31 @@
 import { axiosInstance } from "../config";
-import { useState } from "react";
-import { Alert, Button, TextField, IconButton } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Button, TextField, IconButton, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
-  const [url, setUrl] = useState(election.url);
-  const [title, setTitle] = useState(election.title);
+const CreateCredential = ({ credentials, setCreate }) => {
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const makeEditRequest = async () => {
+  const makeCreateRequest = async () => {
     try {
-      const res = await axiosInstance.put(`/api/elections/${election.id}`, {
+      const res = await axiosInstance.post("/api/credentials/", {
         url: url,
-        title: title
+        title: title,
       });
-
-      let oldElections = elections;
-      oldElections[edit] = res.data;
-      setElections(oldElections);
+      credentials.push(res.data);
       setUrl("");
       setTitle("");
-      setEdit("");
+      setCreate(false);
     } catch (err) {
       setErrors(err.response.data.errors);
-      // console.log(err);
     }
   };
 
   return (
-    <div className="file-container column" key={election.id}>
+    <div className="file-container column">
+      <h2>New credential</h2>
       {errors.map((error) => {
         return (
           <Alert
@@ -41,9 +38,14 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
           </Alert>
         );
       })}
-      <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
+      <IconButton
+        id="close"
+        onClick={() => setCreate(false)}
+        aria-label="close"
+      >
         <CloseIcon />
       </IconButton>
+
       <TextField
         sx={{
           marginTop: "3rem",
@@ -52,7 +54,7 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
         label="Title"
         onChange={(e) => setTitle(e.target.value)}
         defaultValue={title}
-       
+        
       ></TextField>
       <TextField
         sx={{
@@ -60,21 +62,21 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
           width: "-webkit-fill-available",
         }}
         id="input-text"
-        label="Election Document URL"
+        label="Credential Document URL"
         onChange={(e) => setUrl(e.target.value)}
-        defaultValue={url}
-       
+
       ></TextField>
+
       <Button
         variant="contained"
         size="medium"
-        sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        sx={{ maxWidth: "200px", marginTop: "1rem" }}
+        onClick={() => makeCreateRequest()}
       >
-        Edit Election
+        Create Credential
       </Button>
     </div>
   );
 };
 
-export default EditElection;
+export default CreateCredential;

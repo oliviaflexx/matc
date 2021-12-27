@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CreateElection from "../../components/Create-Election";
-import EditElection from "../../components/Edit-Election";
+import CreateSyllabus from "../../components/Create-Syllabus";
+import EditSyllabus from "../../components/Edit-Syllabus";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
 
-const Elections = ({user}) => {
-  const [elections, setElections] = useState([]);
-  const [OGElections, setOGElections] = useState([]);
+const Syllabi = ({ user }) => {
+  const [syllabi, setSyllabi] = useState([]);
+  const [OGSyllabi, setOGSyllabi] = useState([]);
 
   const [errors, setErrors] = useState([]);
   const [edit, setEdit] = useState("");
@@ -22,41 +22,40 @@ const Elections = ({user}) => {
   const [success, setSuccess] = useState(false);
 
   const makeFakeData = () => {
-    let elections1 = [];
+    let syllabi1 = [];
     for (let i = 1; i < 11; i++) {
-      elections1.push({
-        title: `election ${i}`,
+      syllabi1.push({
+        title: `syllabus ${i}`,
         url: "https://www.google.com",
       });
     }
-    setElections(elections1);
-    setOGElections(elections1);
-  }
-
+    setSyllabi(syllabi1);
+    setOGSyllabi(syllabi1);
+  };
 
   useEffect(() => {
-    const getElections = async () => {
+    const getSyllabi = async () => {
       try {
-        const res = await axiosInstance.get("/api/elections");
+        const res = await axiosInstance.get("/api/syllabi");
         //   console.log(res.data);
-        setElections(res.data);
-        setOGElections(res.data);
+        setSyllabi(res.data);
       } catch (err) {
         setErrors(err.response.data.errors);
         console.log(err);
       }
     };
 
-    getElections();
+    getSyllabi();
+
   }, []);
 
-  const deleteElection = async (deleteIndex) => {
+  const deleteSyllabus = async (deleteIndex) => {
     try {
       const res = await axiosInstance.delete(
-        `/api/elections/${elections[deleteIndex].id}`
+        `/api/syllabi/${syllabi[deleteIndex].id}`
       );
 
-      const deleted = elections.splice(deleteIndex, 1);
+      const deleted = syllabi.splice(deleteIndex, 1);
       setDeleteFirst("");
       setSuccess({ message: `${deleted[0].title} deleted` });
     } catch (err) {
@@ -66,27 +65,26 @@ const Elections = ({user}) => {
   };
 
   const handleSearch = (search) => {
-    const newElections = OGElections.filter((election) =>
-    // console.log(set.set.title);
-    election.title.toLowerCase().includes(search)
-  );
+    const newSyllabi = OGSyllabi.filter((syllabus) =>
+      // console.log(set.set.title);
+      syllabus.title.toLowerCase().includes(search)
+    );
 
-  setElections(newElections);
+    setSyllabi(newSyllabi);
   }
-  
 
   return (
     <>
       <DepartmentHeader />
       <main>
         <div className="top-container">
-          <h1>Elections</h1>
+          <h1>Syllabi</h1>
           <TextField
             // sx={{
             //   height: ".5rem"
             // }}
             size="small"
-            label="Search elections"
+            label="Search syllabi"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -108,23 +106,11 @@ const Elections = ({user}) => {
             {success.message}
           </Alert>
         )}
-        {errors.map((error) => {
-          return (
-            <Alert
-              onClose={() => {
-                setErrors([]);
-              }}
-              severity="error"
-            >
-              {error.message}
-            </Alert>
-          );
-        })}
         <button onClick={makeFakeData}>Make fake data</button>
         {create && (
-          <CreateElection
-            elections={elections}
-            setElections={setElections}
+          <CreateSyllabus
+            syllabi={syllabi}
+            setSyllabi={setSyllabi}
             setCreate={setCreate}
           />
         )}
@@ -139,16 +125,16 @@ const Elections = ({user}) => {
             }}
             sx={{ margin: "auto", marginBottom: "1rem", display: "flex" }}
           >
-            Create New Election
+            Create New Syllabus
           </Button>
         )}
-        {elections.map((election, index) => {
+        {syllabi.map((syllabus, index) => {
           if (edit === index) {
             return (
-              <EditElection
-                election={election}
-                elections={elections}
-                setElections={setElections}
+              <EditSyllabus
+                syllabus={syllabus}
+                syllabi={syllabi}
+                setSyllabi={setSyllabi}
                 edit={edit}
                 setEdit={setEdit}
               />
@@ -175,7 +161,7 @@ const Elections = ({user}) => {
                         variant="text"
                         startIcon={<DeleteIcon />}
                         onClick={() => {
-                          deleteElection(index);
+                          deleteSyllabus(index);
                         }}
                         size="small"
                         id="delete"
@@ -205,17 +191,17 @@ const Elections = ({user}) => {
                     )}
                   </>
                 )}
-                <h4>{election.title}</h4>
+                <h4>{syllabus.title}</h4>
                 <Button
                   variant="outlined"
-                  href={election.url}
+                  href={syllabus.url}
                   sx={{
                     "@media screen and (max-width: 600px)": {
                       marginTop: "1rem",
                     },
                   }}
                 >
-                  <ArticleIcon /> Document
+                  <ArticleIcon /> URL
                 </Button>
               </div>
             );
@@ -224,6 +210,6 @@ const Elections = ({user}) => {
       </main>
     </>
   );
-}
+};
 
-export default Elections;
+export default Syllabi;

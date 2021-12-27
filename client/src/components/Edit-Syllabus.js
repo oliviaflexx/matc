@@ -1,23 +1,28 @@
 import { axiosInstance } from "../config";
 import { useState } from "react";
-import { Alert, Button, TextField, IconButton } from "@mui/material";
+import {
+  Alert,
+  Button,
+  TextField,
+  IconButton,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
-  const [url, setUrl] = useState(election.url);
-  const [title, setTitle] = useState(election.title);
+const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
+  const [url, setUrl] = useState(syllabus.url);
+  const [title, setTitle] = useState(syllabus.title);
   const [errors, setErrors] = useState([]);
 
   const makeEditRequest = async () => {
     try {
-      const res = await axiosInstance.put(`/api/elections/${election.id}`, {
+      const res = await axiosInstance.put(`/api/syllabi/${syllabi.id}`, {
         url: url,
-        title: title
+        title: title,
       });
 
-      let oldElections = elections;
-      oldElections[edit] = res.data;
-      setElections(oldElections);
+      let oldSyllabi = syllabi;
+      oldSyllabi[edit] = res.data;
+      setSyllabi(oldSyllabi);
       setUrl("");
       setTitle("");
       setEdit("");
@@ -28,7 +33,7 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
   };
 
   return (
-    <div className="file-container column" key={election.id}>
+    <div className="file-container column" key={syllabus.id}>
       {errors.map((error) => {
         return (
           <Alert
@@ -52,7 +57,6 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
         label="Title"
         onChange={(e) => setTitle(e.target.value)}
         defaultValue={title}
-       
       ></TextField>
       <TextField
         sx={{
@@ -60,10 +64,9 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
           width: "-webkit-fill-available",
         }}
         id="input-text"
-        label="Election Document URL"
+        label="Syllabus Document URL"
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={url}
-       
       ></TextField>
       <Button
         variant="contained"
@@ -71,10 +74,10 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
         onClick={() => makeEditRequest()}
       >
-        Edit Election
+        Edit Syllabus
       </Button>
     </div>
   );
 };
 
-export default EditElection;
+export default EditSyllabus;

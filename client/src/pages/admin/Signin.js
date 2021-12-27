@@ -1,9 +1,9 @@
 import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Alert, Button, TextField, IconButton, FormGroup } from "@mui/material";
+import { useState } from "react";
+import { Alert, Button, TextField, FormGroup } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const Signin = () => {
+const Signin = ({setUser}) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,9 +22,10 @@ const Signin = () => {
             password: password,
           }
         );
-      
+          
+        setUser(res.data);
         setSuccess(true);
-        const timerId = setTimeout(() => {
+        setTimeout(() => {
           navigate("/department");
         }, 1500);
 

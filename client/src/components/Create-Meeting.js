@@ -2,8 +2,9 @@ import { axiosInstance } from "../config";
 import { useState, useEffect } from "react";
 import { Button, TextField, IconButton, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import moment from "moment-timezone";
 
-const CreateMeeting = ({ meetings, setCreateMeeting }) => {
+const CreateMeeting = ({ meetings, setCreate, setMeetings }) => {
   const [date, setDate] = useState("");
   const [agenda, setAgenda] = useState("");
   const [attendance, setAttendance] = useState("");
@@ -12,35 +13,44 @@ const CreateMeeting = ({ meetings, setCreateMeeting }) => {
 
   const makeCreateRequest = async () => {
     try {
-      const res = await axiosInstance.post("/api/meetings/", {
-        date: date,
+      const resEdit = await axiosInstance.post("/api/meetings/", {
+        date: moment(date).tz('America'),
         agenda: agenda,
         attendance: attendance,
         minutes: minutes,
       });
-      meetings.push(res.data);
+      
+        const resGet = await axiosInstance.get("/api/meetings");
+        //   console.log(res.data);
+        setMeetings(resGet.data);
+
       setAgenda("");
       setAttendance("");
       setDate("");
-      setCreateMeeting(false);
+      setCreate(false);
     } catch (err) {
       setErrors(err.response.data.errors);
      
     }
   };
   return (
-    <div className="file-container">
+    <div className="file-container column">
       <h2>New meeting</h2>
       {errors.map((error) => {
         return (
-          <Alert onClose={() => {setErrors([])}} severity="error">
+          <Alert
+            onClose={() => {
+              setErrors([]);
+            }}
+            severity="error"
+          >
             {error.message}
           </Alert>
         );
       })}
       <IconButton
         id="close"
-        onClick={() => setCreateMeeting(false)}
+        onClick={() => setCreate(false)}
         aria-label="close"
       >
         <CloseIcon />

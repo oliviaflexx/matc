@@ -1,45 +1,34 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { axiosInstance } from "./config";
-import { Routes, Route, useParams } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Meetings from "./pages/department/Meetings";
 import { BrowserRouter } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Elections from "./pages/department/Elections";
+import Credentials from "./pages/department/Credentials";
+import Syllabi from "./pages/department/Syllabi";
 import Signin from "./pages/admin/Signin";
 import Signout from "./pages/admin/Signout";
+import DepartmentHome from "./pages/department/Home";
 
 function App() {
-    const [user, setUser] = useState("");
-  // const getrooms = async () => {
-  //   try {
-  //     // const res = await axiosInstance.post("/api/auth/signup", {email: "oliviaflexx@gmail.com", password: "mm7373922", name: "oliviaflexx"});
-  //     const res = await axiosInstance.post("/api/credentials/", {
-  //       title: "a credential",
-  //       url: "something.com",
-  //     });
-  //     console.log(res.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+    const [user, setUser] = useState("something");
 
-  
   useEffect(() => {
-    const getrooms2 = async () => {
-      try {
-        const res = await axiosInstance.post("/api/auth/signup", {
-          email: "oliviaflexx@gmail.com",
-          password: "mm7373922",
-          name: "oliviaflexx",
-        });
+    // const getrooms2 = async () => {
+    //   try {
+    //     const res = await axiosInstance.post("/api/auth/signup", {
+    //       email: "oliviaflexx@gmail.com",
+    //       password: "mm7373922",
+    //       name: "oliviaflexx",
+    //     });
 
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getrooms2();
+    //     console.log(res.data);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+    // getrooms2();
 
     const getUser = async () => {
       try {
@@ -57,13 +46,24 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="department/meetings" element={<Meetings user={user} />} />
-        {/* <Route path="meetings" element={<Meetings user={{id: "123"}} />} /> */}
         <Route
           path="department/elections"
           element={<Elections user={user} />}
         />
-        <Route path="admin/signin" element={<Signin user={user} />} />
-        <Route path="admin/signout" element={<Signout user={user} />} />
+        <Route
+          path="department/credentials"
+          element={<Credentials user={user} />}
+        />
+        <Route path="department/syllabi" element={<Syllabi user={user} />} />
+        <Route path="department" element={<DepartmentHome user={user} />} />
+        <Route
+          path="admin/signin"
+          element={<Signin user={user} setUser={setUser} />}
+        />
+        <Route
+          path="admin/signout"
+          element={<Signout user={user} setUser={setUser} />}
+        />
       </Routes>
     </BrowserRouter>
   );

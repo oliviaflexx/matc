@@ -1,9 +1,9 @@
 import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Alert, Button, TextField, IconButton, FormGroup } from "@mui/material";
+import { useState } from "react";
+import { Alert, Button} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const Signout = () => {
+const Signout = ({user, setUser}) => {
     const navigate = useNavigate();
     const [success, setSuccess] = useState(false);
     const [errors, setErrors] = useState([]);
@@ -13,6 +13,7 @@ const Signout = () => {
         const res = await axiosInstance.post("/api/auth/signout");
 
         setSuccess(true);
+        setUser(null);
         const timerId = setTimeout(() => {
           navigate("/department");
         }, 1500);

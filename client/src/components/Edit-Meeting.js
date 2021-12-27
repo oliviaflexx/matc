@@ -1,9 +1,8 @@
 import { axiosInstance } from "../config";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Alert, Button, TextField, IconButton } from "@mui/material";
-import moment from "moment";
+import moment from "moment-timezone";
 import CloseIcon from "@mui/icons-material/Close";
-import validator from "validator";
 
 const EditMeeting = ({
   meetings,
@@ -21,19 +20,16 @@ const EditMeeting = ({
     const makeEditRequest = async () => {
       try {
         
-        const res = await axiosInstance.put(
-          `/api/meetings/${meeting.id}`,
-          {
-            date: date,
-            agenda: agenda,
-            attendance: attendance,
-            minutes: minutes,
-          }
-        );
+        const res = await axiosInstance.put(`/api/meetings/${meeting.id}`, {
+          date: moment(date).tz('America'),
+          agenda: agenda,
+          attendance: attendance,
+          minutes: minutes,
+        });
       
-        let oldMeetings = meetings;
-        oldMeetings[edit] = res.data;
-        setMeetings(oldMeetings);
+        const resGet = await axiosInstance.get("/api/meetings");
+        //   console.log(res.data);
+        setMeetings(resGet.data);
         setAgenda("");
         setAttendance("");
         setDate("");
@@ -45,10 +41,15 @@ const EditMeeting = ({
     };
 
   return (
-    <div className="file-container" key={meeting.id}>
+    <div className="file-container column" key={meeting.id}>
       {errors.map((error) => {
         return (
-          <Alert onClose={() => {setErrors([])}} severity="error">
+          <Alert
+            onClose={() => {
+              setErrors([]);
+            }}
+            severity="error"
+          >
             {error.message}
           </Alert>
         );
@@ -61,7 +62,7 @@ const EditMeeting = ({
         id="meeting date"
         type="date"
         onChange={(e) => {
-            setDate(e.target.value);
+          setDate(e.target.value);
         }}
         value={date}
       ></input>

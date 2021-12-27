@@ -4,15 +4,14 @@ import { useState, useEffect } from "react";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CreateElection from "../../components/Create-Election";
-import EditElection from "../../components/Edit-Election";
+import CreateCredential from "../../components/Create-Credential";
+import EditCredential from "../../components/Edit-Credential";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
 
-const Elections = ({user}) => {
-  const [elections, setElections] = useState([]);
-  const [OGElections, setOGElections] = useState([]);
-
+const Credentials = ({user}) => {
+  const [OGCredentials, setOGCredentials] = useState([]);
+  const [credentials, setCredentials] = useState([]);
   const [errors, setErrors] = useState([]);
   const [edit, setEdit] = useState("");
   const [create, setCreate] = useState(false);
@@ -21,42 +20,44 @@ const Elections = ({user}) => {
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const makeFakeData = () => {
-    let elections1 = [];
+   const makeFakeData = () => {
+    let credentials1 = [];
     for (let i = 1; i < 11; i++) {
-      elections1.push({
-        title: `election ${i}`,
+      credentials1.push({
+        title: `credential ${i}`,
         url: "https://www.google.com",
       });
     }
-    setElections(elections1);
-    setOGElections(elections1);
+    setCredentials(credentials1);
+    setOGCredentials(credentials1);
+
   }
 
-
   useEffect(() => {
-    const getElections = async () => {
+    const getCredentials = async () => {
       try {
-        const res = await axiosInstance.get("/api/elections");
+        const res = await axiosInstance.get("/api/credentials");
         //   console.log(res.data);
-        setElections(res.data);
-        setOGElections(res.data);
+        setOGCredentials(res.data);
+        setCredentials(res.data);
       } catch (err) {
         setErrors(err.response.data.errors);
         console.log(err);
       }
     };
 
-    getElections();
+    getCredentials();
+    // TESTING PURPOSES
   }, []);
 
-  const deleteElection = async (deleteIndex) => {
+
+  const deleteCredential = async (deleteIndex) => {
     try {
       const res = await axiosInstance.delete(
-        `/api/elections/${elections[deleteIndex].id}`
+        `/api/credentials/${credentials[deleteIndex].id}`
       );
 
-      const deleted = elections.splice(deleteIndex, 1);
+      const deleted = credentials.splice(deleteIndex, 1);
       setDeleteFirst("");
       setSuccess({ message: `${deleted[0].title} deleted` });
     } catch (err) {
@@ -66,27 +67,26 @@ const Elections = ({user}) => {
   };
 
   const handleSearch = (search) => {
-    const newElections = OGElections.filter((election) =>
-    // console.log(set.set.title);
-    election.title.toLowerCase().includes(search)
-  );
+    const newCredentials = OGCredentials.filter((credential) =>
+      // console.log(set.set.title);
+      credential.title.toLowerCase().includes(search)
+    );
 
-  setElections(newElections);
+    setCredentials(newCredentials);
   }
-  
 
   return (
     <>
       <DepartmentHeader />
       <main>
         <div className="top-container">
-          <h1>Elections</h1>
+          <h1>Credentials</h1>
           <TextField
             // sx={{
             //   height: ".5rem"
             // }}
             size="small"
-            label="Search elections"
+            label="Search credentials"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">
@@ -94,9 +94,11 @@ const Elections = ({user}) => {
                 </InputAdornment>
               ),
             }}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) =>
+            handleSearch(e.target.value)}
           ></TextField>
         </div>
+
         {success && (
           <Alert
             sx={{
@@ -122,9 +124,9 @@ const Elections = ({user}) => {
         })}
         <button onClick={makeFakeData}>Make fake data</button>
         {create && (
-          <CreateElection
-            elections={elections}
-            setElections={setElections}
+          <CreateCredential
+            credentials={credentials}
+            setCredentials={setCredentials}
             setCreate={setCreate}
           />
         )}
@@ -139,16 +141,16 @@ const Elections = ({user}) => {
             }}
             sx={{ margin: "auto", marginBottom: "1rem", display: "flex" }}
           >
-            Create New Election
+            Create New Credential
           </Button>
         )}
-        {elections.map((election, index) => {
+        {credentials.map((credential, index) => {
           if (edit === index) {
             return (
-              <EditElection
-                election={election}
-                elections={elections}
-                setElections={setElections}
+              <EditCredential
+                credential={credential}
+                credentials={credentials}
+                setCredentials={setCredentials}
                 edit={edit}
                 setEdit={setEdit}
               />
@@ -175,7 +177,7 @@ const Elections = ({user}) => {
                         variant="text"
                         startIcon={<DeleteIcon />}
                         onClick={() => {
-                          deleteElection(index);
+                          deleteCredential(index);
                         }}
                         size="small"
                         id="delete"
@@ -205,15 +207,16 @@ const Elections = ({user}) => {
                     )}
                   </>
                 )}
-                <h4>{election.title}</h4>
+
+                <h4>{credential.title}</h4>
                 <Button
                   variant="outlined"
-                  href={election.url}
-                  sx={{
-                    "@media screen and (max-width: 600px)": {
-                      marginTop: "1rem",
-                    },
-                  }}
+                  href={credential.url}
+                  // sx={{
+                  //   "@media screen and (max-width: 600px)": {
+                  //     marginTop: "1rem",
+                  //   },
+                  // }}
                 >
                   <ArticleIcon /> Document
                 </Button>
@@ -226,4 +229,4 @@ const Elections = ({user}) => {
   );
 }
 
-export default Elections;
+export default Credentials;

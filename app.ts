@@ -55,6 +55,7 @@ import { NotFoundError, errorHandler } from "./services/errors";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+
 let app = express();
 app.use(cookieParser());
 
@@ -122,6 +123,10 @@ app.use(editFacultyRouter);
 app.use(showFacultyRouter);
 app.use(viewFacultyRouter);
 app.use(deleteFacultyRouter);
+
+
+
+
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 

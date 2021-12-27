@@ -10,7 +10,7 @@ const router = express.Router();
 // show all meetings
 router.get("/api/meetings/", async (req: Request, res: Response) => {
 
-  const meetings = await Meeting.find({});
+  const meetings = await Meeting.find({}).sort({date: -1});
 
   if (!meetings) {
     throw new NotFoundError();

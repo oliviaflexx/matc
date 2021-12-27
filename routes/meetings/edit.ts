@@ -31,7 +31,8 @@ router.put(
         throw new NotFoundError();
     };
 
-    meeting.date = date;
+    meeting.date = new Date(date);
+    console.log(new Date(date));
     meeting.minutes = minutes;
 
     meeting.attendance = attendance;
