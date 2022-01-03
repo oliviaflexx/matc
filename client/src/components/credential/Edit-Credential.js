@@ -1,31 +1,43 @@
-import { axiosInstance } from "../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { axiosInstance } from "../../config";
+import { useState } from "react";
+import {
+  Alert,
+  Button,
+  TextField,
+  IconButton,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const CreateCredential = ({ credentials, setCreate }) => {
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
+const EditCredential = ({ credential, credentials, setCredentials, edit, setEdit }) => {
+  const [url, setUrl] = useState(credential.url);
+  const [title, setTitle] = useState(credential.title);
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
+  const makeEditRequest = async () => {
     try {
-      const res = await axiosInstance.post("/api/credentials/", {
+      const res = await axiosInstance.put(`/api/credentials/${credential.id}`, {
         url: url,
         title: title,
       });
-      credentials.push(res.data);
+
+      let oldCredentials = credentials;
+      oldCredentials[edit] = res.data;
+      setCredentials(oldCredentials);
       setUrl("");
       setTitle("");
-      setCreate(false);
+      setEdit("");
     } catch (err) {
       setErrors(err.response.data.errors);
+      // console.log(err);
     }
   };
 
   return (
-    <div className="file-container column">
-      <h2>New credential</h2>
+    <div
+      className="file-container column"
+      key={credential.id}
+      style={{ animation: `fadeIn 1s` }}
+    >
       {errors.map((error) => {
         return (
           <Alert
@@ -38,14 +50,9 @@ const CreateCredential = ({ credentials, setCreate }) => {
           </Alert>
         );
       })}
-      <IconButton
-        id="close"
-        onClick={() => setCreate(false)}
-        aria-label="close"
-      >
+      <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
-
       <TextField
         sx={{
           marginTop: "3rem",
@@ -54,7 +61,6 @@ const CreateCredential = ({ credentials, setCreate }) => {
         label="Title"
         onChange={(e) => setTitle(e.target.value)}
         defaultValue={title}
-        
       ></TextField>
       <TextField
         sx={{
@@ -64,19 +70,18 @@ const CreateCredential = ({ credentials, setCreate }) => {
         id="input-text"
         label="Credential Document URL"
         onChange={(e) => setUrl(e.target.value)}
-
+        defaultValue={url}
       ></TextField>
-
       <Button
         variant="contained"
         size="medium"
-        sx={{ maxWidth: "200px", marginTop: "1rem" }}
-        onClick={() => makeCreateRequest()}
+        sx={{ maxWidth: "150px", marginTop: "1rem" }}
+        onClick={() => makeEditRequest()}
       >
-        Create Credential
+        Edit Credential
       </Button>
     </div>
   );
 };
 
-export default CreateCredential;
+export default EditCredential;

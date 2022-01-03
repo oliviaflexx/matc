@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CreateElection from "../../components/Create-Election";
-import EditElection from "../../components/Edit-Election";
+import CreateElection from "../../components/election/Create-Election";
+import EditElection from "../../components/election/Edit-Election";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -16,8 +16,8 @@ const Elections = ({user}) => {
   const [errors, setErrors] = useState([]);
   const [edit, setEdit] = useState("");
   const [create, setCreate] = useState(false);
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
+  // const [url, setUrl] = useState("");
+  // const [title, setTitle] = useState("");
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -132,8 +132,8 @@ const Elections = ({user}) => {
           <Button
             variant="contained"
             onClick={() => {
-              setUrl("");
-              setTitle("");
+              // setUrl("");
+              // setTitle("");
               setEdit("");
               setCreate(true);
             }}
@@ -155,7 +155,11 @@ const Elections = ({user}) => {
             );
           } else {
             return (
-              <div className="file-container" key={index}>
+              <div
+                className="file-container"
+                key={index}
+                style={{ animation: `fadeIn 1s` }}
+              >
                 {user && (
                   <>
                     <Button

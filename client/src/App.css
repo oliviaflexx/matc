@@ -1,6 +1,6 @@
 main {
   padding: 2rem;
-  margin-top: 2rem;
+  margin-top: 4rem;
 }
 
 h1 {
@@ -91,13 +91,15 @@ nav {
     position: fixed;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     right: 0;
     left: 0;
     top: 0;
-    background-color: blue;
+    background-color: white;
     padding: 1rem;
     margin-bottom: 1rem;
     z-index: 1000;
+    border-bottom: solid 1px #0000000a;
 }
 
 nav.department div.right a, nav.department div.left a {
@@ -106,11 +108,13 @@ nav.department div.right a, nav.department div.left a {
   padding: 1rem;
 }
 main.home {
-  position: absolute;
+  /* position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  top: 50px;
+  top: 50px; */
+  height: 100vh;
+  /* width: 100vw; */
   padding: 1rem;
       display: flex;
     flex-direction: column;
@@ -146,6 +150,7 @@ div.home a {
   border-radius: .25rem;
   height: 8rem;
 }
+
 }
 @media screen and (max-width: 450px) {
   div.home {
@@ -163,6 +168,10 @@ div.home a {
 }
 main.home {
   bottom: auto;
+  margin-top: 100px;
+}
+section {
+  margin-top: 4rem;
 }
 }
 div.top-container {
@@ -170,4 +179,74 @@ div.top-container {
   justify-content:space-evenly;
   align-items: center;
   flex-wrap: wrap;
+}
+
+div.overlay {
+    background: #13141bbf;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1100;
+}
+
+div.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: white;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    padding-top: 3rem;
+}
+
+div.sidebar a {
+  all: unset;
+  padding: 1rem 5rem;
+  font-size: larger;
+  cursor: pointer;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+}
+
+div.sidebar a.active, div.sidebar a:hover{
+  color: #f89728;
+}
+
+/* .example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+} */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+section h2 {
+  text-align: center;
+}
+
+section {
+  padding: 2rem;
 }

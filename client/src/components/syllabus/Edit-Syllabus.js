@@ -1,31 +1,43 @@
-import { axiosInstance } from "../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { axiosInstance } from "../../config";
+import { useState } from "react";
+import {
+  Alert,
+  Button,
+  TextField,
+  IconButton,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const CreateSyllabus = ({ syllabi, setCreate }) => {
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
+const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
+  const [url, setUrl] = useState(syllabus.url);
+  const [title, setTitle] = useState(syllabus.title);
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
+  const makeEditRequest = async () => {
     try {
-      const res = await axiosInstance.post("/api/syllabi/", {
+      const res = await axiosInstance.put(`/api/syllabi/${syllabi.id}`, {
         url: url,
         title: title,
       });
-      syllabi.push(res.data);
+
+      let oldSyllabi = syllabi;
+      oldSyllabi[edit] = res.data;
+      setSyllabi(oldSyllabi);
       setUrl("");
       setTitle("");
-      setCreate(false);
+      setEdit("");
     } catch (err) {
       setErrors(err.response.data.errors);
+      // console.log(err);
     }
   };
 
   return (
-    <div className="file-container column">
-      <h2>New syllabus</h2>
+    <div
+      className="file-container column"
+      key={syllabus.id}
+      style={{ animation: `fadeIn 1s` }}
+    >
       {errors.map((error) => {
         return (
           <Alert
@@ -38,14 +50,9 @@ const CreateSyllabus = ({ syllabi, setCreate }) => {
           </Alert>
         );
       })}
-      <IconButton
-        id="close"
-        onClick={() => setCreate(false)}
-        aria-label="close"
-      >
+      <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
-
       <TextField
         sx={{
           marginTop: "3rem",
@@ -63,18 +70,18 @@ const CreateSyllabus = ({ syllabi, setCreate }) => {
         id="input-text"
         label="Syllabus Document URL"
         onChange={(e) => setUrl(e.target.value)}
+        defaultValue={url}
       ></TextField>
-
       <Button
         variant="contained"
         size="medium"
-        sx={{ maxWidth: "200px", marginTop: "1rem" }}
-        onClick={() => makeCreateRequest()}
+        sx={{ maxWidth: "150px", marginTop: "1rem" }}
+        onClick={() => makeEditRequest()}
       >
-        Create Syllabus
+        Edit Syllabus
       </Button>
     </div>
   );
 };
 
-export default CreateSyllabus;
+export default EditSyllabus;

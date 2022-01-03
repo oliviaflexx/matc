@@ -1,4 +1,4 @@
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
 import { Button, TextField, IconButton, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -34,7 +34,7 @@ const CreateMeeting = ({ meetings, setCreate, setMeetings }) => {
     }
   };
   return (
-    <div className="file-container column">
+    <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New meeting</h2>
       {errors.map((error) => {
         return (

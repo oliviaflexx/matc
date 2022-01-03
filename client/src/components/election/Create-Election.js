@@ -1,4 +1,4 @@
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
 import { Button, TextField, IconButton, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -24,7 +24,7 @@ const CreateElection = ({ elections, setCreate }) => {
     };
 
 return (
-  <div className="file-container column">
+  <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
     <h2>New election</h2>
     {errors.map((error) => {
       return (
@@ -50,7 +50,6 @@ return (
       label="Title"
       onChange={(e) => setTitle(e.target.value)}
       defaultValue={title}
- 
     ></TextField>
     <TextField
       sx={{
@@ -60,7 +59,6 @@ return (
       id="input-text"
       label="Election Document URL"
       onChange={(e) => setUrl(e.target.value)}
-     
     ></TextField>
 
     <Button

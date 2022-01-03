@@ -1,4 +1,4 @@
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState } from "react";
 import { Alert, Button, TextField, IconButton } from "@mui/material";
 import moment from "moment-timezone";
@@ -41,7 +41,11 @@ const EditMeeting = ({
     };
 
   return (
-    <div className="file-container column" key={meeting.id}>
+    <div
+      className="file-container column"
+      key={meeting.id}
+      style={{ animation: `fadeIn 1s` }}
+    >
       {errors.map((error) => {
         return (
           <Alert

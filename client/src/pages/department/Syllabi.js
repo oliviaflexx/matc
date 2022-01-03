@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CreateSyllabus from "../../components/Create-Syllabus";
-import EditSyllabus from "../../components/Edit-Syllabus";
+import CreateSyllabus from "../../components/syllabus/Create-Syllabus";
+import EditSyllabus from "../../components/syllabus/Edit-Syllabus";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -81,7 +81,7 @@ const Syllabi = ({ user }) => {
           <h1>Syllabi</h1>
           <TextField
             // sx={{
-            //   height: ".5rem"
+            //   boxShadow: "2px 2px 6px 1px rgb(0 0 0 / 10%)"
             // }}
             size="small"
             label="Search syllabi"
@@ -141,7 +141,11 @@ const Syllabi = ({ user }) => {
             );
           } else {
             return (
-              <div className="file-container" key={index}>
+              <div
+                className="file-container"
+                key={index}
+                style={{ animation: `fadeIn 1s` }}
+              >
                 {user && (
                   <>
                     <Button
@@ -201,7 +205,7 @@ const Syllabi = ({ user }) => {
                     },
                   }}
                 >
-                  <ArticleIcon /> URL
+                  <ArticleIcon /> Document
                 </Button>
               </div>
             );

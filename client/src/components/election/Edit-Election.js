@@ -1,28 +1,23 @@
-import { axiosInstance } from "../config";
+import { axiosInstance } from "../../config";
 import { useState } from "react";
-import {
-  Alert,
-  Button,
-  TextField,
-  IconButton,
-} from "@mui/material";
+import { Alert, Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
-  const [url, setUrl] = useState(syllabus.url);
-  const [title, setTitle] = useState(syllabus.title);
+const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
+  const [url, setUrl] = useState(election.url);
+  const [title, setTitle] = useState(election.title);
   const [errors, setErrors] = useState([]);
 
   const makeEditRequest = async () => {
     try {
-      const res = await axiosInstance.put(`/api/syllabi/${syllabi.id}`, {
+      const res = await axiosInstance.put(`/api/elections/${election.id}`, {
         url: url,
-        title: title,
+        title: title
       });
 
-      let oldSyllabi = syllabi;
-      oldSyllabi[edit] = res.data;
-      setSyllabi(oldSyllabi);
+      let oldElections = elections;
+      oldElections[edit] = res.data;
+      setElections(oldElections);
       setUrl("");
       setTitle("");
       setEdit("");
@@ -33,7 +28,11 @@ const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
   };
 
   return (
-    <div className="file-container column" key={syllabus.id}>
+    <div
+      className="file-container column"
+      key={election.id}
+      style={{ animation: `fadeIn 1s` }}
+    >
       {errors.map((error) => {
         return (
           <Alert
@@ -64,7 +63,7 @@ const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
           width: "-webkit-fill-available",
         }}
         id="input-text"
-        label="Syllabus Document URL"
+        label="Election Document URL"
         onChange={(e) => setUrl(e.target.value)}
         defaultValue={url}
       ></TextField>
@@ -74,10 +73,10 @@ const EditSyllabus = ({ syllabus, syllabi, setSyllabi, edit, setEdit }) => {
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
         onClick={() => makeEditRequest()}
       >
-        Edit Syllabus
+        Edit Election
       </Button>
     </div>
   );
 };
 
-export default EditSyllabus;
+export default EditElection;

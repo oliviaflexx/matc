@@ -10,9 +10,16 @@ import Syllabi from "./pages/department/Syllabi";
 import Signin from "./pages/admin/Signin";
 import Signout from "./pages/admin/Signout";
 import DepartmentHome from "./pages/department/Home";
+// import { ThemeProvider, createTheme } from "@mui/material/styles";
+
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: "dark",
+//   },
+// });
 
 function App() {
-    const [user, setUser] = useState("something");
+    const [user, setUser] = useState(null);
 
   useEffect(() => {
     // const getrooms2 = async () => {
@@ -43,29 +50,34 @@ function App() {
   }, [])
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="department/meetings" element={<Meetings user={user} />} />
-        <Route
-          path="department/elections"
-          element={<Elections user={user} />}
-        />
-        <Route
-          path="department/credentials"
-          element={<Credentials user={user} />}
-        />
-        <Route path="department/syllabi" element={<Syllabi user={user} />} />
-        <Route path="department" element={<DepartmentHome user={user} />} />
-        <Route
-          path="admin/signin"
-          element={<Signin user={user} setUser={setUser} />}
-        />
-        <Route
-          path="admin/signout"
-          element={<Signout user={user} setUser={setUser} />}
-        />
-      </Routes>
-    </BrowserRouter>
+    // <ThemeProvider theme={darkTheme}>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="department/meetings"
+            element={<Meetings user={user} />}
+          />
+          <Route
+            path="department/elections"
+            element={<Elections user={user} />}
+          />
+          <Route
+            path="department/credentials"
+            element={<Credentials user={user} />}
+          />
+          <Route path="department/syllabi" element={<Syllabi user={user} />} />
+          <Route path="department" element={<DepartmentHome user={user} />} />
+          <Route
+            path="admin/signin"
+            element={<Signin user={user} setUser={setUser} />}
+          />
+          <Route
+            path="admin/signout"
+            element={<Signout user={user} setUser={setUser} />}
+          />
+        </Routes>
+      </BrowserRouter>
+    // </ThemeProvider>
   );
 }
 

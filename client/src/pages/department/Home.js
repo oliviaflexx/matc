@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
 import DepartmentHeader from "../../components/Department-Header";
 import Navigation from "@mui/icons-material/Navigation";
+import Announcements from "./Announcements";
 
-const DepartmentHome = () => {
+const DepartmentHome = ({user}) => {
     return (
       <>
         <DepartmentHeader />
         <main className="home">
-          <Navigation/>
           <h1>Welcome MATC English department</h1>
           <div className="home">
             <NavLink to="meetings">View Meetings</NavLink>
@@ -16,6 +16,7 @@ const DepartmentHome = () => {
             <NavLink to="syllabi">View Syllabi</NavLink>
           </div>
         </main>
+        <Announcements user={user}  />
       </>
     );
 };

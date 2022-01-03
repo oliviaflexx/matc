@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Alert, Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CreateCredential from "../../components/Create-Credential";
-import EditCredential from "../../components/Edit-Credential";
+import CreateCredential from "../../components/credential/Create-Credential";
+import EditCredential from "../../components/credential/Edit-Credential";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -157,7 +157,11 @@ const Credentials = ({user}) => {
             );
           } else {
             return (
-              <div className="file-container" key={index}>
+              <div
+                className="file-container"
+                key={index}
+                style={{ animation: `fadeIn 1s` }}
+              >
                 {user && (
                   <>
                     <Button
@@ -169,6 +173,7 @@ const Credentials = ({user}) => {
                       }}
                       size="small"
                       id="edit"
+                      aria-label="edit"
                     >
                       Edit
                     </Button>

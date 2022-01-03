@@ -5,8 +5,8 @@ import { axiosInstance } from "../../config";
 import { useState, useEffect} from "react";
 import { Alert, Button, InputLabel, Select, MenuItem } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import CreateMeeting from "../../components/Create-Meeting";
-import EditMeeting from "../../components/Edit-Meeting";
+import CreateMeeting from "../../components/meeting/Create-Meeting";
+import EditMeeting from "../../components/meeting/Edit-Meeting";
 import DeleteIcon from "@mui/icons-material/Delete";
 import moment from "moment";
 import DepartmentHeader from "../../components/Department-Header";
@@ -183,7 +183,11 @@ const Meetings = ({user}) => {
             );
           } else {
             return (
-              <div className="file-container column" key={index}>
+              <div
+                className="file-container column"
+                key={index}
+                style={{ animation: `fadeIn 1s` }}
+              >
                 {user && (
                   <>
                     <Button
