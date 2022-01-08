@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { IconButton, TextareaAutosize } from "@mui/material";
+import { IconButton } from "@mui/material";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import {useState} from "react";
 import CloseIcon from "@mui/icons-material/Close";
