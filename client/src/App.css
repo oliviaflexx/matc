@@ -24,6 +24,10 @@ div.file-container {
   transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
 }
 
+div.file-container p {
+  white-space: pre-wrap;
+}
+
 div.file-container.column {
   flex-direction: column;
 }

@@ -1,8 +1,9 @@
-import { axiosInstance } from "../../config";
 import { useState } from "react";
-import { Alert, Button, TextField, IconButton } from "@mui/material";
+import {Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment-timezone";
+import Errors from "../popups/Errors";
+import editRequest from "../../requests/edit";
 
 const EditAnnouncement = ({
   announcement,
@@ -10,6 +11,7 @@ const EditAnnouncement = ({
   setAnnouncements,
   edit,
   setEdit,
+  setSuccess,
 }) => {
   const [title, setTitle] = useState(announcement.title);
   const [date, setDate] = useState(announcement.date);
@@ -18,32 +20,6 @@ const EditAnnouncement = ({
 
   const [errors, setErrors] = useState([]);
 
-  const makeEditRequest = async () => {
-    try {
-      const res = await axiosInstance.put(
-        `/api/announcements/${announcement.id}`,
-        {
-          title: title,
-          date: moment(date).tz("America"),
-          creator: creator,
-          content: content,
-        }
-      );
-
-      let oldAnnouncements = announcements;
-      oldAnnouncements[edit] = res.data;
-      setAnnouncements(oldAnnouncements);
-      setContent("");
-      setTitle("");
-      setCreator("");
-      setDate("");
-
-      setEdit("");
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      // console.log(err);
-    }
-  };
 
   return (
     <div
@@ -51,18 +27,7 @@ const EditAnnouncement = ({
       key={announcement.id}
       style={{ animation: `fadeIn 1s` }}
     >
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
@@ -110,7 +75,26 @@ const EditAnnouncement = ({
         variant="contained"
         size="medium"
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        onClick={() =>
+          editRequest(
+            "announcements",
+            announcements,
+            setAnnouncements,
+            announcement.id,
+            {
+              title,
+              content,
+              creator,
+              date: moment(date).tz('America'),
+            },
+            [setTitle, setDate, setCreator, setContent],
+            [],
+            edit,
+            setEdit,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Edit Announcement
       </Button>

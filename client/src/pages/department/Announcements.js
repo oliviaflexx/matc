@@ -1,11 +1,13 @@
-import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
-import { Alert, Button, InputAdornment, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CreateAnnouncement from "../../components/announcement/Create-Announcement";
 import EditAnnouncement from "../../components/announcement/Edit-Announcement";
 import Moment from "react-moment";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
+import getRequest from "../../requests/get";
+import DeleteButtons from "../../components/DeleteButtons";
 
 const Announcements = ({user}) => {
     const [announcements, setAnnouncements] = useState([]);
@@ -30,68 +32,27 @@ const Announcements = ({user}) => {
       setAnnouncements(announcements1);
     };
 
+
+
       useEffect(() => {
-        const getAnnouncements = async () => {
-          try {
-            const res = await axiosInstance.get("/api/announcements");
-            //   console.log(res.data);
-            setAnnouncements(res.data);
-          } catch (err) {
-            setErrors(err.response.data.errors);
-            console.log(err);
-          }
-        };
-
-        getAnnouncements();
+        const setOGData = null;
+        getRequest("announcements", setAnnouncements, setOGData, setErrors);
       }, []);
-
-      const deleteAnnouncement = async (deleteIndex) => {
-        try {
-          const res = await axiosInstance.delete(
-            `/api/announcements/${announcements[deleteIndex].id}`
-          );
-
-          const deleted = announcements.splice(deleteIndex, 1);
-          setDeleteFirst("");
-          setSuccess({ message: `${deleted[0].title} deleted` });
-        } catch (err) {
-          setErrors(err.response.data.errors);
-          console.log(err);
-        }
-      };
 
       return (
         <section>
-          <h2>Announcements</h2>
+          <h1>Announcements</h1>
           {success && (
-            <Alert
-              sx={{
-                marginBottom: "1rem",
-              }}
-              severity="success"
-              onClose={() => setSuccess(false)}
-            >
-              {success.message}
-            </Alert>
+            <Success message={success.message} setSuccess={setSuccess} />
           )}
-          {errors.map((error) => {
-            return (
-              <Alert
-                onClose={() => {
-                  setErrors([]);
-                }}
-                severity="error"
-              >
-                {error.message}
-              </Alert>
-            );
-          })}
+          <Errors errors={errors} setErrors={setErrors} />
           <button onClick={makeFakeData}>Make fake data</button>
           {create && (
             <CreateAnnouncement
               announcements={announcements}
               setAnnouncements={setAnnouncements}
               setCreate={setCreate}
+              setSuccess={setSuccess}
             />
           )}
           {user && !create && (
@@ -117,6 +78,7 @@ const Announcements = ({user}) => {
                   setAnnouncements={setAnnouncements}
                   edit={edit}
                   setEdit={setEdit}
+                  setSuccess={setSuccess}
                 />
               );
             } else {
@@ -140,47 +102,24 @@ const Announcements = ({user}) => {
                       >
                         Edit
                       </Button>
-                      {deleteFirst === index ? (
-                        <Button
-                          variant="text"
-                          startIcon={<DeleteIcon />}
-                          onClick={() => {
-                            deleteAnnouncement(index);
-                          }}
-                          size="small"
-                          id="delete"
-                          sx={{
-                            color: "red",
-                          }}
-                          onBlur={() => setDeleteFirst("")}
-                        >
-                          Are you sure?
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="text"
-                          startIcon={<DeleteIcon />}
-                          onClick={() => {
-                            setDeleteFirst(index);
-                            setCreate(false);
-                          }}
-                          size="small"
-                          id="delete"
-                          sx={{
-                            color: "red",
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      )}
+                      <DeleteButtons
+                        deleteFirst={deleteFirst}
+                        setDeleteFirst={setDeleteFirst}
+                        setCreate={setCreate}
+                        resource={"announcements"}
+                        resources={announcements}
+                        deleteIndex={index}
+                        setSuccess={setSuccess}
+                        setErrors={setErrors}
+                      />
                     </>
                   )}
                   <h3>{announcement.title}</h3>
                   <Moment format="MMMM Do YYYY" local withTitle>
                     {announcement.date}
                   </Moment>
-                <p>{announcement.content}</p>
-                <span>{announcement.creator}</span>
+                  <p>{announcement.content}</p>
+                  <span>{announcement.creator}</span>
                 </div>
               );
             }

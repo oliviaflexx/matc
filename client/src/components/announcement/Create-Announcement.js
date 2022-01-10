@@ -1,10 +1,11 @@
-import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment-timezone";
+import Errors from "../popups/Errors";
+import createRequest from "../../requests/create";
 
-const CreateAnnouncement = ({ announcements, setCreate }) => {
+const CreateAnnouncement = ({ announcements, setCreate, setSuccess }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [creator, setCreator] = useState("");
@@ -12,41 +13,10 @@ const CreateAnnouncement = ({ announcements, setCreate }) => {
 
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
-    try {
-      const res = await axiosInstance.post("/api/announcements/", {
-        title: title,
-        content: content,
-        creator: creator,
-        date: moment(date).tz("America"),
-      });
-      announcements.push(res.data);
-      setContent("");
-      setTitle("");
-      setCreator("");
-      setDate("");
-
-      setCreate(false);
-    } catch (err) {
-      setErrors(err.response.data.errors);
-    }
-  };
-
   return (
     <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New announcement</h2>
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setCreate(false)} c>
         <CloseIcon />
       </IconButton>
@@ -78,8 +48,8 @@ const CreateAnnouncement = ({ announcements, setCreate }) => {
       ></TextField>
 
       <TextField
-      multiline={true}
-      minRows={4}
+        multiline={true}
+        minRows={4}
         sx={{
           marginTop: "1rem",
           width: "-webkit-fill-available",
@@ -97,7 +67,23 @@ const CreateAnnouncement = ({ announcements, setCreate }) => {
           marginTop: "1rem",
           backgroundColor: "#f89728",
         }}
-        onClick={() => makeCreateRequest()}
+        onClick={() =>
+          createRequest(
+            "announcements",
+            announcements,
+            {
+              title,
+              content,
+              creator,
+              date: moment(date).tz("America"),
+            },
+            [setTitle, setDate, setCreator, setContent],
+            [],
+            setCreate,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Create Announcement
       </Button>
