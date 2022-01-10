@@ -5,7 +5,6 @@ import Errors from "../popups/Errors";
 import { topTextfield, middleTextField, createButton } from "../../styles";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import EditMeeting from "../meeting/Edit-Meeting";
 import editRequest from "../../requests/edit";
 
 const EditFaculty = ({ facultyPerson, faculty, setFaculty, edit, setEdit, setSuccess }) => {

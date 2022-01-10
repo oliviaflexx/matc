@@ -1,12 +1,14 @@
-import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
-import { Alert, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CreateEvent from "../../components/event/Create-Event";
 import EditEvent from "../../components/event/Edit-Event";
 import Moment from "react-moment";
 import PublicHeader from "../../components/Public-Header";
+import getRequest from "../../requests/get";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
+import DeleteButtons from "../../components/DeleteButtons";
 
 const Events = ({ user }) => {
   const [events, setEvents] = useState([]);
@@ -15,7 +17,7 @@ const Events = ({ user }) => {
   const [create, setCreate] = useState(false);
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
-  user = {"hey": "lala"};
+  // user = {"hey": "lala"};
 
   const makeFakeData = () => {
     let events1 = [];
@@ -30,163 +32,100 @@ const Events = ({ user }) => {
     setEvents(events1);
   };
 
-  useEffect(() => {
-    const getEvents = async () => {
-      try {
-        const res = await axiosInstance.get("/api/events");
-        //   console.log(res.data);
-        setEvents(res.data);
-      } catch (err) {
-        setErrors(err.response.data.errors);
-        console.log(err);
-      }
-    };
 
-    getEvents();
-  }, []);
+    useEffect(() => {
+      const setOGData = null;
+      getRequest("events", setEvents, setOGData, setErrors);
+    }, []);
 
-  const deleteEvent = async (deleteIndex) => {
-    try {
-      const res = await axiosInstance.delete(
-        `/api/events/${events[deleteIndex].id}`
-      );
-
-      const deleted = events.splice(deleteIndex, 1);
-      setDeleteFirst("");
-      setSuccess({ message: `${deleted[0].title} deleted` });
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      console.log(err);
-    }
-  };
 
   return (
     <>
-    <PublicHeader/>
-    <section>
-      <h2>Events</h2>
-      {success && (
-        <Alert
-          sx={{
-            marginBottom: "1rem",
-          }}
-          severity="success"
-          onClose={() => setSuccess(false)}
-        >
-          {success.message}
-        </Alert>
-      )}
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
+      <PublicHeader />
+      <main>
+        <h1>Events</h1>
+        
+        {success && (
+          <Success message={success.message} setSuccess={setSuccess} />
+        )}
+        <Errors errors={errors} setErrors={setErrors} />
+        <button onClick={makeFakeData}>Make fake data</button>
+        {create && (
+          <CreateEvent
+            events={events}
+            setEvents={setEvents}
+            setCreate={setCreate}
+            setSuccess={setSuccess}
+          />
+        )}
+        {user && !create && (
+          <Button
+            variant="contained"
+            onClick={() => {
+  
+              setEdit("");
+              setCreate(true);
             }}
-            severity="error"
+            sx={{ margin: "auto", marginBottom: "1rem", display: "flex" }}
           >
-            {error.message}
-          </Alert>
-        );
-      })}
-      <button onClick={makeFakeData}>Make fake data</button>
-      {create && (
-        <CreateEvent
-          events={events}
-          setEvents={setEvents}
-          setCreate={setCreate}
-        />
-      )}
-      {user && !create && (
-        <Button
-          variant="contained"
-          onClick={() => {
-            // setUrl("");
-            // setTitle("");
-            setEdit("");
-            setCreate(true);
-          }}
-          sx={{ margin: "auto", marginBottom: "1rem", display: "flex" }}
-        >
-          Create New Event
-        </Button>
-      )}
-      {events.map((event, index) => {
-        if (edit === index) {
-          return (
-            <EditEvent
-              event={event}
-              events={events}
-              setEvents={setEvents}
-              edit={edit}
-              setEdit={setEdit}
-            />
-          );
-        } else {
-          return (
-            <div
-              className="file-container column"
-              key={index}
-              style={{ animation: `fadeIn 1s` }}
-            >
-              {user && (
-                <>
-                  <Button
-                    variant="text"
-                    startIcon={<EditIcon />}
-                    onClick={() => {
-                      setEdit(index);
-                      setCreate(false);
-                    }}
-                    size="small"
-                    id="edit"
-                  >
-                    Edit
-                  </Button>
-                  {deleteFirst === index ? (
+            Create New Event
+          </Button>
+        )}
+        {events.map((event, index) => {
+          if (edit === index) {
+            return (
+              <EditEvent
+                event={event}
+                events={events}
+                setEvents={setEvents}
+                edit={edit}
+                setEdit={setEdit}
+                setSuccess={setSuccess}
+              />
+            );
+          } else {
+            return (
+              <div
+                className="file-container column"
+                key={index}
+                style={{ animation: `fadeIn 1s` }}
+              >
+                {user && (
+                  <>
                     <Button
                       variant="text"
-                      startIcon={<DeleteIcon />}
+                      startIcon={<EditIcon />}
                       onClick={() => {
-                        deleteEvent(index);
-                      }}
-                      size="small"
-                      id="delete"
-                      sx={{
-                        color: "red",
-                      }}
-                      onBlur={() => setDeleteFirst("")}
-                    >
-                      Are you sure?
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="text"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => {
-                        setDeleteFirst(index);
+                        setEdit(index);
                         setCreate(false);
                       }}
                       size="small"
-                      id="delete"
-                      sx={{
-                        color: "red",
-                      }}
+                      id="edit"
                     >
-                      Delete
+                      Edit
                     </Button>
-                  )}
-                </>
-              )}
-              <h3>{event.title}</h3>
-              <Moment format="MMMM Do YYYY" local withTitle>
-                {event.date}
-              </Moment>
-              <p>{event.description}</p>
-            </div>
-          );
-        }
-      })}
-    </section>
+                    <DeleteButtons
+                      deleteFirst={deleteFirst}
+                      setDeleteFirst={setDeleteFirst}
+                      setCreate={setCreate}
+                      resource={"events"}
+                      resources={events}
+                      deleteIndex={index}
+                      setSuccess={setSuccess}
+                      setErrors={setErrors}
+                    />
+                  </>
+                )}
+                <h3>{event.title}</h3>
+                <Moment format="MMMM Do YYYY" local withTitle>
+                  {event.date}
+                </Moment>
+                <p>{event.description}</p>
+              </div>
+            );
+          }
+        })}
+      </main>
     </>
   );
 };

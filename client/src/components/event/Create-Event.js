@@ -1,49 +1,20 @@
-import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import moment from "moment-timezone";
+import createRequest from "../../requests/create";
+import Errors from "../popups/Errors";
 
-const CreateEvent = ({ events, setCreate }) => {
+const CreateEvent = ({ events, setCreate, setSuccess }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
 
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
-    try {
-      const res = await axiosInstance.post("/api/events/", {
-        title: title,
-        description: description,
-        date: moment(date).tz("America"),
-      });
-      events.push(res.data);
-      setDescription("");
-      setTitle("");
-      setDate("");
-
-      setCreate(false);
-    } catch (err) {
-      setErrors(err.response.data.errors);
-    }
-  };
-
   return (
     <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New event</h2>
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setCreate(false)} c>
         <CloseIcon />
       </IconButton>
@@ -85,7 +56,22 @@ const CreateEvent = ({ events, setCreate }) => {
           marginTop: "1rem",
           backgroundColor: "#f89728",
         }}
-        onClick={() => makeCreateRequest()}
+        onClick={() =>
+          createRequest(
+            "events",
+            events,
+            {
+              title,
+              date,
+              description,
+            },
+            [setTitle, setDate, setDescription],
+            [],
+            setCreate,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Create Event
       </Button>

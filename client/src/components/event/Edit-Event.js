@@ -1,46 +1,15 @@
-import { axiosInstance } from "../../config";
 import { useState } from "react";
-import { Alert, Button, TextField, IconButton } from "@mui/material";
+import {Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import moment from "moment-timezone";
+import editRequest from "../../requests/edit";
+import Errors from "../popups/Errors";
 
-const EditEvent = ({
-  event,
-  events,
-  setEvents,
-  edit,
-  setEdit,
-}) => {
+const EditEvent = ({ event, events, setEvents, edit, setEdit, setSuccess }) => {
   const [title, setTitle] = useState(event.title);
   const [date, setDate] = useState(event.date);
   const [description, setDescription] = useState(event.description);
 
   const [errors, setErrors] = useState([]);
-
-  const makeEditRequest = async () => {
-    try {
-      const res = await axiosInstance.put(
-        `/api/events/${event.id}`,
-        {
-          title: title,
-          date: moment(date).tz("America"),
-          description: description
-        }
-      );
-
-      let oldEvents = events;
-      oldEvents[edit] = res.data;
-      setEvents(oldEvents);
-      setDescription("");
-      setTitle("");
-      setDate("");
-
-      setEdit("");
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      // console.log(err);
-    }
-  };
 
   return (
     <div
@@ -48,18 +17,7 @@ const EditEvent = ({
       key={event.id}
       style={{ animation: `fadeIn 1s` }}
     >
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
@@ -98,7 +56,25 @@ const EditEvent = ({
         variant="contained"
         size="medium"
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        onClick={() =>
+          editRequest(
+            "events",
+            events,
+            setEvents,
+            event.id,
+            {
+              title,
+              date,
+              description,
+            },
+            [setTitle, setDate, setDescription],
+            [],
+            edit,
+            setEdit,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Edit Event
       </Button>
