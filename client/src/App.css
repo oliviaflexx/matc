@@ -40,11 +40,7 @@ div.file-container > div.bottom {
   width: -webkit-fill-available;
   
 }
-@media screen and (max-width: 600px) {
-  div.file-container > div.bottom {
-    flex-direction: column;
-  }
-}
+
 div.file-container > div.top {
   margin-top: 1.5rem;
   display: flex;
@@ -53,7 +49,7 @@ div.file-container > div.top {
 }
 
 /* div.bottom a {
-  all: unset;
+  all: unset
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,6 +151,7 @@ div.home a {
 @media screen and (max-width: 450px) {
   div.home {
   flex-direction: column;
+
 }
 main.home h1 {
   margin-top: 2rem;
@@ -172,6 +169,9 @@ main.home {
 }
 section {
   margin-top: 4rem;
+}
+main.person {
+  padding: 0 1rem;
 }
 }
 div.top-container {
@@ -249,4 +249,74 @@ section h2 {
 
 section {
   padding: 2rem;
+}
+
+div.courses {
+  display: flex;
+    align-items: center;
+    width: -webkit-fill-available;
+    justify-content: center;
+}
+
+div.faculty {
+  padding: 1.5rem;
+    position: relative;
+    transition: all .12s cubic-bezier(.47,0,.745,.715);
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 6px 1px rgb(0 0 0 / 10%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    margin: auto;
+    flex-direction: column;
+    height: 100%;
+}
+
+.col-12 {
+  margin-bottom: 1.5rem;
+}
+
+article {
+  white-space: pre-wrap;
+  margin-bottom: 2rem;
+}
+
+div.col-12.col-md-6, main.person h1 {
+  margin-bottom: 1.5rem;
+}
+
+main.person {
+  padding: 0 4rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 600px) {
+  div.file-container > div.bottom {
+    flex-direction: column;
+  }
+  main.person {
+  padding: 0 2rem;
+}
+}
+
+.row.person div.col-md-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main.person img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  margin: 2rem auto;
+}
+
+.faculty img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  margin: 1rem;
 }

@@ -6,6 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CreateEvent from "../../components/event/Create-Event";
 import EditEvent from "../../components/event/Edit-Event";
 import Moment from "react-moment";
+import PublicHeader from "../../components/Public-Header";
 
 const Events = ({ user }) => {
   const [events, setEvents] = useState([]);
@@ -60,6 +61,8 @@ const Events = ({ user }) => {
   };
 
   return (
+    <>
+    <PublicHeader/>
     <section>
       <h2>Events</h2>
       {success && (
@@ -184,6 +187,7 @@ const Events = ({ user }) => {
         }
       })}
     </section>
+    </>
   );
 };
 
