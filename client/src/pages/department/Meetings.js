@@ -1,30 +1,25 @@
-import { useMediaQuery } from "react-responsive";
+// import { useMediaQuery } from "react-responsive";
 import Moment from "react-moment";
 import ArticleIcon from "@mui/icons-material/Article";
-import { axiosInstance } from "../../config";
 import { useState, useEffect} from "react";
-import { Alert, Button, InputLabel, Select, MenuItem } from "@mui/material";
+import {Button, Select, MenuItem } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CreateMeeting from "../../components/meeting/Create-Meeting";
 import EditMeeting from "../../components/meeting/Edit-Meeting";
-import DeleteIcon from "@mui/icons-material/Delete";
-import moment from "moment";
 import DepartmentHeader from "../../components/Department-Header";
+import getRequest from "../../requests/get";
+import DeleteButtons from "../../components/DeleteButtons";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
 
 const Meetings = ({user}) => {
-    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+    // const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
     const [meetings, setMeetings] = useState([]);
     const [errors, setErrors] = useState([]);
     const [edit, setEdit] = useState("");
-    const [date, setDate] = useState("");
-    const [agenda, setAgenda] = useState("");
-    const [attendance, setAttendance] = useState("");
-    const [minutes, setMinutes] = useState("");
     const [create, setCreate] = useState(false);
     const [deleteFirst, setDeleteFirst] = useState("");
     const [success, setSuccess] = useState(false);
-  // const [search, setSearch] = useState("");
-    console.log("RENDER");
     const [filter, setFilter] = useState("newest");
     
     
@@ -44,69 +39,11 @@ const Meetings = ({user}) => {
       
     }
     
-
     useEffect(() => {
-        const getMeetings = async () => {
-            try {
-              const res = await axiosInstance.get("/api/meetings");
-              //   console.log(res.data);
-              setMeetings(res.data);
-            } catch (err) {
-              setErrors(err.response.data.errors);
-              console.log(err);
-            }
-        }
-        
-        getMeetings();
-        // TESTING PURPOSES
-        
-    }, [])
+      const setOGData = null;
+      getRequest("meetings", setMeetings, setOGData, setErrors);
+    }, []);
    
-      const deleteMeeting = async (deleteIndex) => {
-        try {
-          const res = await axiosInstance.delete(
-            `/api/meetings/${meetings[deleteIndex].id}`
-          );
-
-          const deleted = meetings.splice(deleteIndex, 1);
-          setDeleteFirst("");
-          setSuccess({
-            message: `${moment(deleted[0].date).format(
-              "MMMM Do YYYY"
-            )} meeting deleted`,
-          });
-        } catch (err) {
-          setErrors(err.response.data.errors);
-          console.log(err);
-        }
-      };
-
-      // useEffect(() => {
-        
-  
-      //   const copyOGMeetings = OGMeetings;
-      //   const foundMeeting = copyOGMeetings.find(
-      //     (meeting) =>
-      //       // console.log(set.set.title);
-      //       (meeting.date = search)
-      //   );
-
-      //   if (foundMeeting) {
-      //     console.log("DATE HERE", foundMeeting);
-      //   }
-        
-      //   console.log(search);
-      //   if (OGMeetings.length) {
-      //     console.log("IF EXISTS", OGMeetings[0].date);
-      //   } 
-
-      //   if (foundMeeting) {
-      //     setMeetings([foundMeeting]);
-      //   } else {
-      //     setMeetings([]);
-      //   }
-        
-      // }, [search]);
 
   return (
     <>
@@ -114,7 +51,6 @@ const Meetings = ({user}) => {
       <main>
         <div className="top-container">
           <h1>Meetings</h1>
-   
 
           <Select
             labelId="demo-simple-select-label"
@@ -123,32 +59,24 @@ const Meetings = ({user}) => {
             label="Filter"
             onChange={(e) => {
               setFilter(e.target.value);
-              setMeetings(meetings.reverse())
-            }
-            }
+              setMeetings(meetings.reverse());
+            }}
           >
             <MenuItem value={"newest"}>Newest</MenuItem>
             <MenuItem value={"oldest"}>Oldest</MenuItem>
-  
           </Select>
         </div>
 
         {success && (
-          <Alert
-            sx={{
-              marginBottom: "1rem",
-            }}
-            severity="success"
-            onClose={() => setSuccess(false)}
-          >
-            {success.message}
-          </Alert>
+          <Success message={success.message} setSuccess={setSuccess} />
         )}
+        <Errors errors={errors} setErrors={setErrors} />
         {create && (
           <CreateMeeting
             meetings={meetings}
             setMeetings={setMeetings}
             setCreate={setCreate}
+            setSuccess={setSuccess}
           />
         )}
         <button onClick={makeFakeData}>Make fake data</button>
@@ -156,10 +84,6 @@ const Meetings = ({user}) => {
           <Button
             variant="contained"
             onClick={() => {
-              setAgenda("");
-              setAttendance("");
-              setMinutes("");
-              setDate("");
               setEdit("");
               setCreate(true);
             }}
@@ -179,6 +103,7 @@ const Meetings = ({user}) => {
                 setMeetings={setMeetings}
                 edit={edit}
                 setEdit={setEdit}
+                setSuccess={setSuccess}
               />
             );
           } else {
@@ -202,39 +127,16 @@ const Meetings = ({user}) => {
                     >
                       Edit
                     </Button>
-                    {deleteFirst === index ? (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          deleteMeeting(index);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                        onBlur={() => setDeleteFirst("")}
-                      >
-                        Are you sure?
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          setDeleteFirst(index);
-                          setCreate(false);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
+                    <DeleteButtons
+                      deleteFirst={deleteFirst}
+                      setDeleteFirst={setDeleteFirst}
+                      setCreate={setCreate}
+                      resource={"meetings"}
+                      resources={meetings}
+                      deleteIndex={index}
+                      setSuccess={setSuccess}
+                      setErrors={setErrors}
+                    />
                   </>
                 )}
 

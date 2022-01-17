@@ -1,43 +1,18 @@
-import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Errors from "../popups/Errors";
+import createRequest from "../../requests/create";
 
-const CreateSyllabus = ({ syllabi, setCreate }) => {
+const CreateSyllabus = ({ syllabi, setCreate, setSuccess }) => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
-    try {
-      const res = await axiosInstance.post("/api/syllabi/", {
-        url: url,
-        title: title,
-      });
-      syllabi.push(res.data);
-      setUrl("");
-      setTitle("");
-      setCreate(false);
-    } catch (err) {
-      setErrors(err.response.data.errors);
-    }
-  };
-
   return (
     <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New syllabus</h2>
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton
         id="close"
         onClick={() => setCreate(false)}
@@ -69,7 +44,21 @@ const CreateSyllabus = ({ syllabi, setCreate }) => {
         variant="contained"
         size="medium"
         sx={{ maxWidth: "200px", marginTop: "1rem" }}
-        onClick={() => makeCreateRequest()}
+        onClick={() =>
+          createRequest(
+            "syllabi",
+            syllabi,
+            {
+              url,
+              title,
+            },
+            [setUrl, setTitle],
+            [],
+            setCreate,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Create Syllabus
       </Button>

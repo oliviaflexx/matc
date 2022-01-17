@@ -1,43 +1,19 @@
-import { axiosInstance } from "../../config";
-import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert } from "@mui/material";
+import { useState } from "react";
+import { Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Errors from "../popups/Errors";
+import createRequest from "../../requests/create";
 
-const CreateCredential = ({ credentials, setCreate }) => {
+const CreateCredential = ({ credentials, setCreate, setSuccess }) => {
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
-    try {
-      const res = await axiosInstance.post("/api/credentials/", {
-        url: url,
-        title: title,
-      });
-      credentials.push(res.data);
-      setUrl("");
-      setTitle("");
-      setCreate(false);
-    } catch (err) {
-      setErrors(err.response.data.errors);
-    }
-  };
 
   return (
     <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New credential</h2>
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setCreate(false)} c>
         <CloseIcon />
       </IconButton>
@@ -69,7 +45,21 @@ const CreateCredential = ({ credentials, setCreate }) => {
           marginTop: "1rem",
           backgroundColor: "#f89728",
         }}
-        onClick={() => makeCreateRequest()}
+        onClick={() =>
+          createRequest(
+            "credentials",
+            credentials,
+            {
+              url,
+              title,
+            },
+            [setUrl, setTitle],
+            [],
+            setCreate,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Create Credential
       </Button>

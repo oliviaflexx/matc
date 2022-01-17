@@ -3,13 +3,16 @@ import { useState } from "react";
 import { Alert, Button, TextField, IconButton } from "@mui/material";
 import moment from "moment-timezone";
 import CloseIcon from "@mui/icons-material/Close";
+import Errors from "../popups/Errors";
+import editRequest from "../../requests/edit";
 
 const EditMeeting = ({
   meetings,
   setMeetings,
   setEdit,
   edit,
-  meeting
+  meeting,
+  setSuccess
 }) => {
     const [date, setDate] = useState(moment(meeting.date).format("YYYY-MM-DD"));
     const [agenda, setAgenda] = useState(meeting.agenda);
@@ -17,47 +20,13 @@ const EditMeeting = ({
     const [minutes, setMinutes] = useState(meeting.minutes);
     const [errors, setErrors] = useState([]);
 
-    const makeEditRequest = async () => {
-      try {
-        
-        const res = await axiosInstance.put(`/api/meetings/${meeting.id}`, {
-          date: moment(date).tz('America'),
-          agenda: agenda,
-          attendance: attendance,
-          minutes: minutes,
-        });
-      
-        const resGet = await axiosInstance.get("/api/meetings");
-        //   console.log(res.data);
-        setMeetings(resGet.data);
-        setAgenda("");
-        setAttendance("");
-        setDate("");
-        setEdit("");
-      } catch (err) {
-        setErrors(err.response.data.errors);
-        // console.log(err);
-      }
-    };
-
   return (
     <div
       className="file-container column"
       key={meeting.id}
       style={{ animation: `fadeIn 1s` }}
     >
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
@@ -103,7 +72,26 @@ const EditMeeting = ({
         variant="contained"
         size="medium"
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        onClick={() =>
+          editRequest(
+            "meetings",
+            meetings,
+            setMeetings,
+            meeting.id,
+            {
+              date: moment(date).tz("America"),
+              agenda,
+              attendance,
+              minutes,
+            },
+            [setDate, setAgenda, setAttendance, setMinutes],
+            [],
+            edit,
+            setEdit,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Edit Meeting
       </Button>

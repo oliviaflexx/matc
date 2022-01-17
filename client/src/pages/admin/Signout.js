@@ -1,7 +1,9 @@
 import { axiosInstance } from "../../config";
 import { useState } from "react";
-import { Alert, Button} from "@mui/material";
+import {Button} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
 
 const Signout = ({user, setUser}) => {
     const navigate = useNavigate();
@@ -24,37 +26,16 @@ const Signout = ({user, setUser}) => {
 
     return (
       <main>
-        {errors.map((error) => {
-          return (
-            <Alert
-              onClose={() => {
-                setErrors([]);
-              }}
-              sx={{
-                marginBottom: "1rem",
-              }}
-              severity="error"
-            >
-              {error.message}
-            </Alert>
-          );
-        })}
         {success && (
-          <Alert
-            sx={{
-              marginBottom: "1rem",
-            }}
-            severity="success"
-          >
-            Successfully signed out!
-          </Alert>
+          <Success message={"Successfully signed out!"} setSuccess={setSuccess} />
         )}
+        <Errors errors={errors} setErrors={setErrors} />
         <div
           style={{
             margin: "auto",
             width: "100%",
             display: "flex",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
           className="center"
         >

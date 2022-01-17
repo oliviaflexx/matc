@@ -8,6 +8,10 @@ import CreateSyllabus from "../../components/syllabus/Create-Syllabus";
 import EditSyllabus from "../../components/syllabus/Edit-Syllabus";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
+import getRequest from "../../requests/get";
+import DeleteButtons from "../../components/DeleteButtons";
 
 const Syllabi = ({ user }) => {
   const [syllabi, setSyllabi] = useState([]);
@@ -16,8 +20,6 @@ const Syllabi = ({ user }) => {
   const [errors, setErrors] = useState([]);
   const [edit, setEdit] = useState("");
   const [create, setCreate] = useState(false);
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -34,35 +36,8 @@ const Syllabi = ({ user }) => {
   };
 
   useEffect(() => {
-    const getSyllabi = async () => {
-      try {
-        const res = await axiosInstance.get("/api/syllabi");
-        //   console.log(res.data);
-        setSyllabi(res.data);
-      } catch (err) {
-        setErrors(err.response.data.errors);
-        console.log(err);
-      }
-    };
-
-    getSyllabi();
-
+    getRequest("syllabi", setSyllabi, setOGSyllabi, setErrors);
   }, []);
-
-  const deleteSyllabus = async (deleteIndex) => {
-    try {
-      const res = await axiosInstance.delete(
-        `/api/syllabi/${syllabi[deleteIndex].id}`
-      );
-
-      const deleted = syllabi.splice(deleteIndex, 1);
-      setDeleteFirst("");
-      setSuccess({ message: `${deleted[0].title} deleted` });
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      console.log(err);
-    }
-  };
 
   const handleSearch = (search) => {
     const newSyllabi = OGSyllabi.filter((syllabus) =>
@@ -96,30 +71,22 @@ const Syllabi = ({ user }) => {
           ></TextField>
         </div>
         {success && (
-          <Alert
-            sx={{
-              marginBottom: "1rem",
-            }}
-            severity="success"
-            onClose={() => setSuccess(false)}
-          >
-            {success.message}
-          </Alert>
+          <Success message={success.message} setSuccess={setSuccess} />
         )}
+        <Errors errors={errors} setErrors={setErrors} />
         <button onClick={makeFakeData}>Make fake data</button>
         {create && (
           <CreateSyllabus
             syllabi={syllabi}
             setSyllabi={setSyllabi}
             setCreate={setCreate}
+            setSuccess={setSuccess}
           />
         )}
         {user && !create && (
           <Button
             variant="contained"
             onClick={() => {
-              setUrl("");
-              setTitle("");
               setEdit("");
               setCreate(true);
             }}
@@ -137,6 +104,7 @@ const Syllabi = ({ user }) => {
                 setSyllabi={setSyllabi}
                 edit={edit}
                 setEdit={setEdit}
+                setSuccess={setSuccess}
               />
             );
           } else {
@@ -160,39 +128,16 @@ const Syllabi = ({ user }) => {
                     >
                       Edit
                     </Button>
-                    {deleteFirst === index ? (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          deleteSyllabus(index);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                        onBlur={() => setDeleteFirst("")}
-                      >
-                        Are you sure?
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          setDeleteFirst(index);
-                          setCreate(false);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
+                    <DeleteButtons
+                      deleteFirst={deleteFirst}
+                      setDeleteFirst={setDeleteFirst}
+                      setCreate={setCreate}
+                      resource={"syllabi"}
+                      resources={syllabi}
+                      deleteIndex={index}
+                      setSuccess={setSuccess}
+                      setErrors={setErrors}
+                    />
                   </>
                 )}
                 <h4>{syllabus.title}</h4>

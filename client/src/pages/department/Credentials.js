@@ -1,13 +1,15 @@
 import ArticleIcon from "@mui/icons-material/Article";
-import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
-import { Alert, Button, InputAdornment, TextField } from "@mui/material";
+import { Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import CreateCredential from "../../components/credential/Create-Credential";
 import EditCredential from "../../components/credential/Edit-Credential";
 import DepartmentHeader from "../../components/Department-Header";
 import SearchIcon from "@mui/icons-material/Search";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
+import getRequest from "../../requests/get";
+import DeleteButtons from "../../components/DeleteButtons";
 
 const Credentials = ({user}) => {
   const [OGCredentials, setOGCredentials] = useState([]);
@@ -15,8 +17,6 @@ const Credentials = ({user}) => {
   const [errors, setErrors] = useState([]);
   const [edit, setEdit] = useState("");
   const [create, setCreate] = useState(false);
-  const [url, setUrl] = useState("");
-  const [title, setTitle] = useState("");
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -33,38 +33,9 @@ const Credentials = ({user}) => {
 
   }
 
-  useEffect(() => {
-    const getCredentials = async () => {
-      try {
-        const res = await axiosInstance.get("/api/credentials");
-        //   console.log(res.data);
-        setOGCredentials(res.data);
-        setCredentials(res.data);
-      } catch (err) {
-        setErrors(err.response.data.errors);
-        console.log(err);
-      }
-    };
-
-    getCredentials();
-    // TESTING PURPOSES
-  }, []);
-
-
-  const deleteCredential = async (deleteIndex) => {
-    try {
-      const res = await axiosInstance.delete(
-        `/api/credentials/${credentials[deleteIndex].id}`
-      );
-
-      const deleted = credentials.splice(deleteIndex, 1);
-      setDeleteFirst("");
-      setSuccess({ message: `${deleted[0].title} deleted` });
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      console.log(err);
-    }
-  };
+    useEffect(() => {
+      getRequest("credentials", setCredentials, setOGCredentials, setErrors);
+    }, []);
 
   const handleSearch = (search) => {
     const newCredentials = OGCredentials.filter((credential) =>
@@ -94,48 +65,27 @@ const Credentials = ({user}) => {
                 </InputAdornment>
               ),
             }}
-            onChange={(e) =>
-            handleSearch(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
           ></TextField>
         </div>
 
         {success && (
-          <Alert
-            sx={{
-              marginBottom: "1rem",
-            }}
-            severity="success"
-            onClose={() => setSuccess(false)}
-          >
-            {success.message}
-          </Alert>
+          <Success message={success.message} setSuccess={setSuccess} />
         )}
-        {errors.map((error) => {
-          return (
-            <Alert
-              onClose={() => {
-                setErrors([]);
-              }}
-              severity="error"
-            >
-              {error.message}
-            </Alert>
-          );
-        })}
+        <Errors errors={errors} setErrors={setErrors} />
         <button onClick={makeFakeData}>Make fake data</button>
         {create && (
           <CreateCredential
             credentials={credentials}
             setCredentials={setCredentials}
             setCreate={setCreate}
+            setSuccess={setSuccess}
           />
         )}
         {user && !create && (
           <Button
             variant="contained"
             onClick={() => {
-              setUrl("");
-              setTitle("");
               setEdit("");
               setCreate(true);
             }}
@@ -153,6 +103,7 @@ const Credentials = ({user}) => {
                 setCredentials={setCredentials}
                 edit={edit}
                 setEdit={setEdit}
+                setSuccess={setSuccess}
               />
             );
           } else {
@@ -177,39 +128,16 @@ const Credentials = ({user}) => {
                     >
                       Edit
                     </Button>
-                    {deleteFirst === index ? (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          deleteCredential(index);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                        onBlur={() => setDeleteFirst("")}
-                      >
-                        Are you sure?
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="text"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => {
-                          setDeleteFirst(index);
-                          setCreate(false);
-                        }}
-                        size="small"
-                        id="delete"
-                        sx={{
-                          color: "red",
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    )}
+                    <DeleteButtons
+                      deleteFirst={deleteFirst}
+                      setDeleteFirst={setDeleteFirst}
+                      setCreate={setCreate}
+                      resource={"credentials"}
+                      resources={credentials}
+                      deleteIndex={index}
+                      setSuccess={setSuccess}
+                      setErrors={setErrors}
+                    />
                   </>
                 )}
 
@@ -217,11 +145,11 @@ const Credentials = ({user}) => {
                 <Button
                   variant="outlined"
                   href={credential.url}
-                  // sx={{
-                  //   "@media screen and (max-width: 600px)": {
-                  //     marginTop: "1rem",
-                  //   },
-                  // }}
+                  sx={{
+                    "@media screen and (max-width: 600px)": {
+                      marginTop: "1rem",
+                    },
+                  }}
                 >
                   <ArticleIcon /> Document
                 </Button>

@@ -1,36 +1,24 @@
-import { axiosInstance } from "../../config";
 import { useState } from "react";
 import {
-  Alert,
   Button,
   TextField,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Errors from "../popups/Errors";
+import editRequest from "../../requests/edit";
 
-const EditCredential = ({ credential, credentials, setCredentials, edit, setEdit }) => {
+const EditCredential = ({
+  credential,
+  credentials,
+  setCredentials,
+  edit,
+  setEdit,
+  setSuccess,
+}) => {
   const [url, setUrl] = useState(credential.url);
   const [title, setTitle] = useState(credential.title);
   const [errors, setErrors] = useState([]);
-
-  const makeEditRequest = async () => {
-    try {
-      const res = await axiosInstance.put(`/api/credentials/${credential.id}`, {
-        url: url,
-        title: title,
-      });
-
-      let oldCredentials = credentials;
-      oldCredentials[edit] = res.data;
-      setCredentials(oldCredentials);
-      setUrl("");
-      setTitle("");
-      setEdit("");
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      // console.log(err);
-    }
-  };
 
   return (
     <div
@@ -38,18 +26,7 @@ const EditCredential = ({ credential, credentials, setCredentials, edit, setEdit
       key={credential.id}
       style={{ animation: `fadeIn 1s` }}
     >
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
@@ -76,7 +53,24 @@ const EditCredential = ({ credential, credentials, setCredentials, edit, setEdit
         variant="contained"
         size="medium"
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        onClick={() =>
+          editRequest(
+            "credentials",
+            credentials,
+            setCredentials,
+            credential.id,
+            {
+              url,
+              title,
+            },
+            [setTitle, setUrl],
+            [],
+            edit,
+            setEdit,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Edit Credential
       </Button>

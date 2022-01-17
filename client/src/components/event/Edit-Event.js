@@ -3,6 +3,7 @@ import {Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import editRequest from "../../requests/edit";
 import Errors from "../popups/Errors";
+import moment from "moment-timezone";
 
 const EditEvent = ({ event, events, setEvents, edit, setEdit, setSuccess }) => {
   const [title, setTitle] = useState(event.title);
@@ -64,7 +65,7 @@ const EditEvent = ({ event, events, setEvents, edit, setEdit, setSuccess }) => {
             event.id,
             {
               title,
-              date,
+              date: moment(date).tz("America"),
               description,
             },
             [setTitle, setDate, setDescription],

@@ -59,8 +59,6 @@ const Announcements = ({user}) => {
             <Button
               variant="contained"
               onClick={() => {
-                // setUrl("");
-                // setTitle("");
                 setEdit("");
                 setCreate(true);
               }}

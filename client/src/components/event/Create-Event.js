@@ -3,6 +3,7 @@ import { Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import createRequest from "../../requests/create";
 import Errors from "../popups/Errors";
+import moment from "moment-timezone";
 
 const CreateEvent = ({ events, setCreate, setSuccess }) => {
   const [title, setTitle] = useState("");
@@ -62,7 +63,7 @@ const CreateEvent = ({ events, setCreate, setSuccess }) => {
             events,
             {
               title,
-              date,
+              date: moment(date).tz("America"),
               description,
             },
             [setTitle, setDate, setDescription],

@@ -1,7 +1,9 @@
 import { axiosInstance } from "../../config";
 import { useState } from "react";
-import { Alert, Button, TextField, FormGroup } from "@mui/material";
+import {Button, TextField, FormGroup } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Success from "../../components/popups/Success";
+import Errors from "../../components/popups/Errors";
 
 const Signin = ({setUser}) => {
     const [username, setUsername] = useState("");
@@ -38,30 +40,9 @@ const Signin = ({setUser}) => {
      <main>
        <h1>Sign in</h1>
        {success && (
-         <Alert
-           sx={{
-             marginBottom: "1rem",
-           }}
-           severity="success"
-         >
-           Successfully signed in!
-         </Alert>
+         <Success message={"Successfully signed in!"} setSuccess={setSuccess} />
        )}
-       {errors.map((error) => {
-         return (
-           <Alert
-             onClose={() => {
-               setErrors([]);
-             }}
-             sx={{
-               marginBottom: "1rem",
-             }}
-             severity="error"
-           >
-             {error.message}
-           </Alert>
-         );
-       })}
+       <Errors errors={errors} setErrors={setErrors} />
        <FormGroup
          sx={{
            maxWidth: "300px",

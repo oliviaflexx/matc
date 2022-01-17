@@ -25,7 +25,7 @@ const Faculty = ({ user }) => {
   const [deleteFirst, setDeleteFirst] = useState("");
   const [success, setSuccess] = useState(false);
 
-  user = { hey: "lala" };
+  // user = { hey: "lala" };
   const makeFakeData = () => {
     let faculty1 = [];
     for (let i = 1; i < 10; i++) {

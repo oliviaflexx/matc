@@ -2,30 +2,20 @@ import { axiosInstance } from "../../config";
 import { useState } from "react";
 import { Alert, Button, TextField, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Errors from "../popups/Errors";
+import editRequest from "../../requests/edit";
 
-const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
+const EditElection = ({
+  election,
+  elections,
+  setElections,
+  edit,
+  setEdit,
+  setSuccess,
+}) => {
   const [url, setUrl] = useState(election.url);
   const [title, setTitle] = useState(election.title);
   const [errors, setErrors] = useState([]);
-
-  const makeEditRequest = async () => {
-    try {
-      const res = await axiosInstance.put(`/api/elections/${election.id}`, {
-        url: url,
-        title: title
-      });
-
-      let oldElections = elections;
-      oldElections[edit] = res.data;
-      setElections(oldElections);
-      setUrl("");
-      setTitle("");
-      setEdit("");
-    } catch (err) {
-      setErrors(err.response.data.errors);
-      // console.log(err);
-    }
-  };
 
   return (
     <div
@@ -33,18 +23,7 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
       key={election.id}
       style={{ animation: `fadeIn 1s` }}
     >
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton id="close" onClick={() => setEdit("")} aria-label="close">
         <CloseIcon />
       </IconButton>
@@ -71,7 +50,24 @@ const EditElection = ({ election, elections, setElections, edit, setEdit }) => {
         variant="contained"
         size="medium"
         sx={{ maxWidth: "150px", marginTop: "1rem" }}
-        onClick={() => makeEditRequest()}
+        onClick={() =>
+          editRequest(
+            "elections",
+            elections,
+            setElections,
+            election.id,
+            {
+              url,
+              title,
+            },
+            [setTitle, setUrl],
+            [],
+            edit,
+            setEdit,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Edit Election
       </Button>

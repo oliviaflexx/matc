@@ -3,51 +3,20 @@ import { useState, useEffect } from "react";
 import { Button, TextField, IconButton, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment-timezone";
+import Errors from "../popups/Errors";
+import createRequest from "../../requests/create";
 
-const CreateMeeting = ({ meetings, setCreate, setMeetings }) => {
+const CreateMeeting = ({ meetings, setCreate, setMeetings, setSuccess }) => {
   const [date, setDate] = useState("");
   const [agenda, setAgenda] = useState("");
   const [attendance, setAttendance] = useState("");
   const [minutes, setMinutes] = useState("");
   const [errors, setErrors] = useState([]);
 
-  const makeCreateRequest = async () => {
-    try {
-      const resEdit = await axiosInstance.post("/api/meetings/", {
-        date: moment(date).tz('America'),
-        agenda: agenda,
-        attendance: attendance,
-        minutes: minutes,
-      });
-      
-        const resGet = await axiosInstance.get("/api/meetings");
-        //   console.log(res.data);
-        setMeetings(resGet.data);
-
-      setAgenda("");
-      setAttendance("");
-      setDate("");
-      setCreate(false);
-    } catch (err) {
-      setErrors(err.response.data.errors);
-     
-    }
-  };
   return (
     <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
       <h2>New meeting</h2>
-      {errors.map((error) => {
-        return (
-          <Alert
-            onClose={() => {
-              setErrors([]);
-            }}
-            severity="error"
-          >
-            {error.message}
-          </Alert>
-        );
-      })}
+      <Errors errors={errors} setErrors={setErrors} />
       <IconButton
         id="close"
         onClick={() => setCreate(false)}
@@ -94,7 +63,23 @@ const CreateMeeting = ({ meetings, setCreate, setMeetings }) => {
         variant="contained"
         size="medium"
         sx={{ maxWidth: "200px", marginTop: "1rem" }}
-        onClick={() => makeCreateRequest()}
+        onClick={() =>
+          createRequest(
+            "meetings",
+            meetings,
+            {
+              date: moment(date).tz("America"),
+              agenda,
+              attendance,
+              minutes
+            },
+            [setDate, setAgenda, setAttendance, setMinutes],
+            [],
+            setCreate,
+            setErrors,
+            setSuccess
+          )
+        }
       >
         Create Meeting
       </Button>
