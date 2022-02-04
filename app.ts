@@ -51,6 +51,12 @@ import { showFacultyRouter } from "./routes/faculty/show";
 import { viewFacultyRouter } from "./routes/faculty/index";
 import { deleteFacultyRouter } from "./routes/faculty/delete";
 
+import { createCourseRouter } from "./routes/courses/create";
+import { editCourseRouter } from "./routes/courses/edit";
+import { showCourseRouter } from "./routes/courses/show";
+import { viewCourseRouter } from "./routes/courses/index";
+import { deleteCourseRouter } from "./routes/courses/delete";
+
 import { NotFoundError, errorHandler } from "./services/errors";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -124,7 +130,11 @@ app.use(showFacultyRouter);
 app.use(viewFacultyRouter);
 app.use(deleteFacultyRouter);
 
-
+app.use(createCourseRouter);
+app.use(editCourseRouter);
+app.use(showCourseRouter);
+app.use(viewCourseRouter);
+app.use(deleteCourseRouter);
 
 
 
