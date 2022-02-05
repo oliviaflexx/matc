@@ -25,8 +25,7 @@ router.put(
     const { title, number, description, prerequisites } = req.body;
     const { id } = req.params;
 
-    const course = await Course.findById(id);
-
+    let course = await Course.findById(id)
     if (!course) {
       throw new NotFoundError();
     }
@@ -37,6 +36,10 @@ router.put(
     course.prerequisites = prerequisites;
 
     await course.save();
+
+    course = await Course.findById(id).populate([
+      { path: "prerequisites", model: "Course" },
+    ]);
 
     res.send(course);
   }

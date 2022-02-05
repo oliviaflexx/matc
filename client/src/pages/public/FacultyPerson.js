@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import PublicHeader from "../../components/Public-Header";
 import Errors from "../../components/popups/Errors";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 
 const FacultyPerson = () => {
     const [facultyPerson, setFacultyPerson] = useState("");
@@ -62,7 +64,9 @@ const FacultyPerson = () => {
               <h3>Courses taught: </h3>
               {facultyPerson.courses_taught &&
                 facultyPerson.courses_taught.map((course) => {
-                  return <p>{course}</p>;
+                  return (
+                    <Link to={`/course/${course.id}`}>{course.title}</Link>
+                  );
                 })}
             </div>
           </div>

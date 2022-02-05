@@ -43,7 +43,11 @@ router.post(
 
     await faculty.save();
 
-    res.status(201).send(faculty);
+    const builtFaculty = await Faculty.findById(faculty.id).populate([
+      { path: "courses_taught", model: "Course" },
+    ]);
+
+    res.status(201).send(builtFaculty);
   }
 );
 

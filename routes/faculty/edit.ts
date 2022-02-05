@@ -30,7 +30,7 @@ router.put(
     } = req.body;
     const { id } = req.params;
 
-    const faculty = await Faculty.findById(id);
+    let faculty = await Faculty.findById(id);
 
     if (!faculty) {
       throw new NotFoundError();
@@ -46,6 +46,9 @@ router.put(
 
     await faculty.save();
 
+    faculty = await Faculty.findById(faculty.id).populate([
+      { path: "courses_taught", model: "Course" },
+    ]);
     res.send(faculty);
   }
 );

@@ -1,23 +1,50 @@
 import { axiosInstance } from "../../config";
 import { useState, useEffect } from "react";
-import { Button, TextField, IconButton, Alert, Input } from "@mui/material";
+import {
+  Button,
+  TextField,
+  IconButton,
+  Alert,
+  Input,
+  InputLabel,
+  Select,
+  MenuItem
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Errors from "../popups/Errors";
 import { topTextfield, middleTextField, createButton} from "../../styles";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import createRequest from "../../requests/create";
+import getRequest from "../../requests/get";
 
 const CreateFaculty = ({ faculty, setCreate, setSuccess}) => {
     const [name, setName] = useState("");
     const [office_location, setOffice_location] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-    const [courses_taught, setCourses_taught] = useState(["English 1"]);
+    const [courses_taught, setCourses_taught] = useState([]);
     const [course, setCourse] = useState("");
     const [extra, setExtra] = useState("");
     const [photo, setPhoto] = useState("");
     const [errors, setErrors] = useState([]);
+    const [course_taught, setCourse_taught] = useState({});
+    const [courses, setCourses] = useState([]);
+    const [OGcourses, setOGcourses] = useState([]);
+
+      const handleChange = (event) => {
+        // check if course is already in list if yes then throw an error
+        if (courses_taught.includes(event.target.value)) {
+          setCourse_taught({});
+        } else {
+          setCourse_taught(event.target.value);
+          courses_taught.push(event.target.value);
+        }
+      };
+
+    useEffect(() => {
+      getRequest("courses", setCourses, setOGcourses, setErrors);
+    }, []);
 
     return (
       <div className="file-container column" style={{ animation: `fadeIn 1s` }}>
@@ -84,42 +111,39 @@ const CreateFaculty = ({ faculty, setCreate, setSuccess}) => {
             margin: "1rem",
           }}
         >
-          {courses_taught.map((course, index) => {
-            return (
-              <Chip
-                label={course}
-                key={index}
-                onDelete={() => {
-                  const newCourses = courses_taught.filter(
-                    (course2) => course !== course2
-                  );
-                  setCourses_taught(newCourses);
-                }}
-              />
-            );
-          })}
+          {courses_taught &&
+            courses_taught.map((course) => {
+              return (
+                <Chip
+                  label={course.title}
+                  key={course.id}
+                  onDelete={() => {
+                    const newCourses = courses_taught.filter(
+                      (course2) => course !== course2
+                    );
+                    setCourses_taught(newCourses);
+                  }}
+                />
+              );
+            })}
         </Stack>
-        <div className="courses">
-          <TextField
-            sx={{
-              width: "50%",
-            }}
-            label="Course Taught"
-            onChange={(e) => setCourse(e.target.value)}
-            defaultValue={course}
-          ></TextField>
-          <Button
-            onClick={() => {
-              if (course) {
-                setCourses_taught([...courses_taught, course]);
-                setCourse("");
-                console.log(course);
-              }
-            }}
-          >
-            Add Course
-          </Button>
-        </div>
+        {courses.length && (
+          <>
+            <InputLabel id="demo-multiple-name-label">Courses taught</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={course_taught}
+              onChange={handleChange}
+            >
+              {courses.map((course) => (
+                <MenuItem key={course.id} value={course}>
+                  {course.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </>
+        )}
 
         <Button
           variant="contained"
@@ -184,7 +208,9 @@ const CreateFaculty = ({ faculty, setCreate, setSuccess}) => {
                   office_location,
                   phone,
                   email,
-                  courses_taught,
+                  courses_taught: courses_taught.map((course) => {
+                    return course.id;
+                  }),
                   extra,
                   photo,
                 },

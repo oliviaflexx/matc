@@ -1,12 +1,13 @@
 //title and url
 import mongoose from "mongoose";
+import {CourseDoc }from "../models/course";
 
 interface FacultyAttrs {
   name: string;
   office_location: string;
   phone: string;
   email: string;
-  courses_taught: string[];
+  courses_taught: CourseDoc[];
   extra: string;
   photo: string;
 }
@@ -20,7 +21,7 @@ export interface FacultyDoc extends mongoose.Document {
   office_location: string | null;
   phone: string | null;
   email: string | null;
-  courses_taught: string[] | null;
+  courses_taught: CourseDoc[] | null;
   extra: string | null;
   photo: string | null;
 }
@@ -45,8 +46,8 @@ const facultySchema = new mongoose.Schema(
     },
     courses_taught: [
       {
-        type: String,
-        required: false,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
       },
     ],
     extra: {

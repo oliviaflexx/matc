@@ -14,6 +14,8 @@ import PublicHome from "./pages/public/Home";
 import Events from "./pages/public/Events";
 import Faculty from "./pages/public/Faculty";
 import FacultyPerson from "./pages/public/FacultyPerson";
+import Courses from "./pages/public/Courses";
+import Course from "./pages/public/Course";
 // import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 // const darkTheme = createTheme({
@@ -71,7 +73,9 @@ function App() {
         <Route path="/" element={<PublicHome user={user} />} />
         <Route path="/events" element={<Events user={user} />} />
         <Route path="/faculty" element={<Faculty user={user} />} />
+        <Route path="/courses" element={<Courses user={user} />} />
         <Route path="/faculty/:id" element={<FacultyPerson user={user} />} />
+        <Route path="/course/:id" element={<Course user={user} />} />
         <Route
           path="admin/signin"
           element={<Signin user={user} setUser={setUser} />}

@@ -18,6 +18,7 @@ router.get("/api/courses/", async (req: Request, res: Response) => {
   ]);
 
   res.send(courses);
+  console.log(courses);
 });
 
 export { router as viewCourseRouter };

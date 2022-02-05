@@ -1,11 +1,8 @@
 import { axiosInstance } from "../../config";
 import getRequest from "../../requests/get";
 import { useState, useEffect } from "react";
-import { Alert, Button, InputAdornment, TextField } from "@mui/material";
+import {Button, InputAdornment, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import CreateEvent from "../../components/event/Create-Event";
-import EditEvent from "../../components/event/Edit-Event";
 import Success from "../../components/popups/Success";
 import Errors from "../../components/popups/Errors";
 import CreateFaculty from "../../components/faculty/Create-Faculty";

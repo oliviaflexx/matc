@@ -15,7 +15,9 @@ const router = express.Router();
 // show faculty
 router.get("/api/faculty/", async (req: Request, res: Response) => {
 
-  const faculty = await Faculty.find({});
+  const faculty = await Faculty.find({}).populate([
+    { path: "courses_taught", model: "Course" },
+  ]);
 
   res.send(faculty);
 });

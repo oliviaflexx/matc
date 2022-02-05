@@ -18,7 +18,9 @@ router.get(
   async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const faculty = await Faculty.findById(id);
+    const faculty = await Faculty.findById(id).populate([
+      { path: "courses_taught", model: "Course" },
+    ]);
 
     if (!faculty) {
       throw new NotFoundError();

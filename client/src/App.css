@@ -324,3 +324,8 @@ main.person img {
   object-fit: cover;
   margin: 1rem;
 }
+
+main.course {
+  text-align: center;
+  margin-top: 6rem;
+}

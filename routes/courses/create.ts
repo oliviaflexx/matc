@@ -30,7 +30,11 @@ router.post(
 
     await course.save();
 
-    res.status(201).send(course);
+    const builtCourse = await Course.findById(course.id).populate([
+      { path: "prerequisites", model: "Course" },
+    ]);
+
+    res.status(201).send(builtCourse);
   }
 );
 

@@ -1,5 +1,6 @@
 import { axiosInstance } from "../config";
 import moment from "moment";
+import { couldStartTrivia } from "typescript";
 
 const editRequest = async (
   resource,
@@ -18,6 +19,7 @@ const editRequest = async (
     const res = await axiosInstance.put(`/api/${resource}/${id}`, requestInfo);
     let oldResources = resources;
     oldResources[edit] = res.data;
+    console.log(res.data);
     setResources(oldResources);
     setDataStrings.map((setData) => setData(""));
     setDataArrays.map((setData) => setData([]));

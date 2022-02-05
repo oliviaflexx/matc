@@ -1,8 +1,21 @@
 import request from "supertest";
 import { app } from "../../../app";
+import { Course } from "../../../models/course";
+
+const createCourse = async () => {
+  const course = Course.build({
+    title: "a course",
+    number: 101,
+    description: "a descrip",
+  });
+  await course.save();
+  return course;
+};
 
 it("returns a 201 on successful faculty creation", async () => {
     const cookie = await global.signin();
+
+    const course = await createCourse();
 
     const response = await request(app)
       .post("/api/faculty")
@@ -12,7 +25,7 @@ it("returns a 201 on successful faculty creation", async () => {
         office_location: "room 314",
         phone: "414-677-0909",
         email: "michelle@matc.edu",
-        courses_taught: ["english 101", "english 202"],
+        courses_taught: [course.id],
         extra: "",
         photo: "",
       })
@@ -20,6 +33,8 @@ it("returns a 201 on successful faculty creation", async () => {
 });
 
 it("doesn't allow unauthorized users to create faculty", async () => {
+  const course = await createCourse();
+
     return request(app)
       .post("/api/faculty/")
       .send({
@@ -27,7 +42,7 @@ it("doesn't allow unauthorized users to create faculty", async () => {
         office_location: "room 314",
         phone: "414-677-0909",
         email: "michelle@matc.edu",
-        courses_taught: ["english 101", "english 202"],
+        courses_taught: [course.id],
         extra: "",
         photo: "",
       })
@@ -37,6 +52,9 @@ it("doesn't allow unauthorized users to create faculty", async () => {
 it("returns created faculty correctly", async () => {
     const cookie = await global.signin();
 
+    const course = await createCourse();
+
+
     const response = await request(app)
       .post("/api/faculty")
       .set("Cookie", cookie)
@@ -45,7 +63,7 @@ it("returns created faculty correctly", async () => {
         office_location: "room 314",
         phone: "414-677-0909",
         email: "michelle@matc.edu",
-        courses_taught: ["english 101", "english 202"],
+        courses_taught: [course.id],
         extra: "",
         photo: "",
       })
@@ -53,6 +71,8 @@ it("returns created faculty correctly", async () => {
 
     expect(response.body.name).toEqual("michelle felix");
     expect(response.body.extra).toEqual("");
+    expect(response.body.courses_taught[0].number).toEqual(course.number);
+
 });
 it("doesn't allow empty name", async () => {
     const cookie = await global.signin();
@@ -65,7 +85,7 @@ it("doesn't allow empty name", async () => {
         office_location: "room 314",
         phone: "414-677-0909",
         email: "michelle@matc.edu",
-        courses_taught: ["english 101", "english 202"],
+        courses_taught: [],
         extra: "",
         photo: "",
       })
