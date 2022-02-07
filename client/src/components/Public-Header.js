@@ -41,6 +41,7 @@ const PublicHeader = () => {
             <NavLink to="/faculty">Faculty</NavLink>
             <NavLink to="/courses">Courses</NavLink>
             <NavLink to="/events">Events</NavLink>
+            <NavLink id="bottom" to="/department">Department Access</NavLink>
           </div>
         </div>
       )}

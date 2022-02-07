@@ -329,3 +329,8 @@ main.course {
   text-align: center;
   margin-top: 6rem;
 }
+
+#bottom {
+  position: absolute;
+  bottom: 1px;
+}

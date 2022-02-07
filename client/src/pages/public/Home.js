@@ -6,7 +6,7 @@ const PublicHome = ({ user }) => {
     <>
       <PublicHeader />
       <main className="home">
-        <h1>Welcome to the MATC English department</h1>
+        <h1>Welcome to the Milwaukee Area Technical College English department</h1>
         <div className="home">
           <NavLink to="/faculty">View Faculty</NavLink>
           <NavLink to="/courses">View Courses</NavLink>

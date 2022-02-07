@@ -8,7 +8,7 @@ const DepartmentHome = ({user}) => {
       <>
         <DepartmentHeader />
         <main className="home">
-          <h1>Welcome MATC English department</h1>
+          <h1>Welcome Milwaukee Area Technical College English department</h1>
           <div className="home">
             <NavLink to="meetings">View Meetings</NavLink>
             <NavLink to="credentials">View Credentials</NavLink>
