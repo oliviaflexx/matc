@@ -1,7 +1,11 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth, authorization } from "../../services/middleware";
+import {
+  validateRequest,
+  requireAuth,
+  adminAuth,
+} from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -15,7 +19,7 @@ const router = express.Router();
 // show new announcement
 router.put(
   "/api/announcements/:id",
-  authorization,
+  adminAuth,
   [
     body("date").notEmpty().withMessage("You must supply a date"),
     body("title").notEmpty().withMessage("You must supply a title"),

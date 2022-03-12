@@ -13,7 +13,7 @@ const createElection = async () => {
 };
 
 it("returns a 200 on successful election edit", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const election = await createElection();
 
@@ -31,7 +31,7 @@ it("returns a 200 on successful election edit", async () => {
 });
 
 it("doesn't allow unauthorized users to edit election", async () => {
-  const election = await createElection();
+  let election = await createElection();
 
   const response = await request(app)
     .put(`/api/elections/${election.id}`)
@@ -40,10 +40,21 @@ it("doesn't allow unauthorized users to edit election", async () => {
       url: "something.com",
     })
     .expect(401);
+
+  election = await createElection();
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .put(`/api/elections/${election.id}`)
+    .set("Cookie", cookie)
+    .send({
+      title: "a election 2",
+      url: "something.com",
+    })
+    .expect(401);
 });
 
 it("returns 404 if election doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const response = await request(app)
     .put(`/api/elections/${new mongoose.Types.ObjectId().toHexString()}`)
@@ -56,7 +67,7 @@ it("returns 404 if election doesn't exist", async () => {
 });
 
 it("doesn't allow invalid inputs", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const election = await createElection();
 
@@ -78,4 +89,3 @@ it("doesn't allow invalid inputs", async () => {
     })
     .expect(400);
 });
-

@@ -18,7 +18,7 @@ const createfaculty = async () => {
 };
 
 it("returns a 200 on successful faculty edit", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const faculty = await createfaculty();
 
@@ -55,10 +55,25 @@ it("doesn't allow unauthorized users to edit faculty", async () => {
       photo: "www.url.com",
     })
     .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .put(`/api/faculty/${faculty.id}`)
+    .set("Cookie", cookie)
+    .send({
+      name: "michelle felix",
+      office_location: "room 314",
+      phone: "414-677-0909",
+      email: "michelle@matc.edu",
+      courses_taught: [],
+      extra: "",
+      photo: "www.url.com",
+    })
+    .expect(401);
 });
 
 it("returns 404 if faculty doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const response = await request(app)
     .put(`/api/faculty/${new mongoose.Types.ObjectId().toHexString()}`)
@@ -74,9 +89,8 @@ it("returns 404 if faculty doesn't exist", async () => {
     })
     .expect(404);
 });
-
 it("doesn't allow empty name", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const faculty = await createfaculty();
 
@@ -93,6 +107,4 @@ it("doesn't allow empty name", async () => {
       photo: "www.url.com",
     })
     .expect(400);
-
 });
-

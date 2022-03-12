@@ -16,23 +16,30 @@ const createMeeting = async () => {
 };
 
 it("returns a 200 and the correct meeting", async () => {
-    const cookie = await global.signin();
-    const meeting = await createMeeting();
-    const response = await request(app)
-      .get(`/api/meetings/${meeting.id}`)
-      .set("Cookie", cookie)
-      .send()
-      .expect(200);
+  const cookie = await global.adminSignin();
+  const meeting = await createMeeting();
+  const response = await request(app)
+    .get(`/api/meetings/${meeting.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(200);
 
-      
-    expect(response.body.agenda).toEqual("");
+  expect(response.body.agenda).toEqual("");
+});
+
+it("returns 401 if not signed in", async () => {
+  const meeting = await createMeeting();
+  const response = await request(app)
+    .get(`/api/meetings/${meeting.id}`)
+    .send()
+    .expect(401);
 });
 
 it("returns 404 if meeting doesn't exist", async () => {
-        const cookie = await global.signin();
-        const response = await request(app)
-          .get(`/api/meetings/${new mongoose.Types.ObjectId().toHexString()}`)
-          .set("Cookie", cookie)
-          .send()
-          .expect(404);
+  const cookie = await global.adminSignin();
+  const response = await request(app)
+    .get(`/api/meetings/${new mongoose.Types.ObjectId().toHexString()}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(404);
 });

@@ -1,10 +1,8 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { facultyAuth } from "../../services/middleware";
 import {
-  BadRequestError,
-  NotAuthorizedError,
   NotFoundError,
 } from "../../services/errors";
 
@@ -15,6 +13,7 @@ const router = express.Router();
 // show new announcement
 router.get(
   "/api/announcements/:id",
+  facultyAuth,
   async (req: Request, res: Response) => {
     const { id } = req.params;
 

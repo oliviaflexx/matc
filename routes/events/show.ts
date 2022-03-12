@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { validateRequest, facultyAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,

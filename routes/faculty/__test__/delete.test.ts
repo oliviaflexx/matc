@@ -18,18 +18,18 @@ const createfaculty = async () => {
 };
 
 it("returns a 200 on successful faculty delete", async () => {
-    const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
-    const faculty = await createfaculty();
+  const faculty = await createfaculty();
 
-    const response = await request(app)
-      .delete(`/api/faculty/${faculty.id}`)
-      .set("Cookie", cookie)
-      .send()
-      .expect(200);
+  const response = await request(app)
+    .delete(`/api/faculty/${faculty.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(200);
 
-    const oldfaculty = await Faculty.findById(faculty.id);
-    expect(oldfaculty).toBeNull();
+  const oldfaculty = await Faculty.findById(faculty.id);
+  expect(oldfaculty).toBeNull();
 });
 
 it("doesn't allow unauthorized users to delete faculty", async () => {
@@ -39,10 +39,17 @@ it("doesn't allow unauthorized users to delete faculty", async () => {
     .delete(`/api/faculty/${faculty.id}`)
     .send()
     .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .delete(`/api/faculty/${faculty.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(401);
 });
 
 it("returns 404 if faculty doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const faculty = await createfaculty();
 

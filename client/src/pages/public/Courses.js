@@ -20,7 +20,7 @@ const Courses = ({user}) => {
     const [deleteFirst, setDeleteFirst] = useState("");
     const [success, setSuccess] = useState(false);
 
-    user = {id: 1}
+    // user = {id: 1}
     const makeFakeData = () => {
       let courses1 = [];
       for (let i = 1; i < 100; i++) {

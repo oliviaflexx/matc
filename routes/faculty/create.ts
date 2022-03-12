@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth, authorization } from "../../services/middleware";
+import { validateRequest, requireAuth, adminAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -15,7 +15,7 @@ const router = express.Router();
 // create new faculty
 router.post(
   "/api/faculty/",
-  authorization,
+  adminAuth,
   [
     body("name").notEmpty().withMessage("You must supply a name"),
   ],

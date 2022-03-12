@@ -1,7 +1,6 @@
 import request from "supertest";
 import { app } from "../../../app";
 import { Faculty } from "../../../models/faculty";
-import mongoose from "mongoose";
 
 const createfacultys = async () => {
   for (let i = 0; i < 10; i++) {

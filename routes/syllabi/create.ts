@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth, authorization } from "../../services/middleware";
+import { validateRequest, requireAuth, adminAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -15,7 +15,7 @@ const router = express.Router();
 // create new syllabus
 router.post(
   "/api/syllabi/",
-  authorization,
+  adminAuth,
   [
     body("title").notEmpty().withMessage("You must supply a title"),
     body("url").notEmpty().withMessage("You must supply a url"),
@@ -25,9 +25,9 @@ router.post(
     const { title, url } = req.body;
 
     const syllabus = Syllabus.build({ title, url });
-
+    
     await syllabus.save();
-
+    
     res.status(201).send(syllabus);
   }
 );

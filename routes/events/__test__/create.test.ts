@@ -2,7 +2,7 @@ import request from "supertest";
 import { app } from "../../../app";
 
 it("returns a 201 on successful event creation", async () => {
-    const cookie = await global.signin();
+    const cookie = await global.adminSignin();
     const response = await request(app)
       .post("/api/events/")
       .set("Cookie", cookie)
@@ -18,7 +18,19 @@ it("returns a 201 on successful event creation", async () => {
 });
 
 it("it doesn't allow unsigned in users to create event", async () => {
+  const cookie = await global.facultySignin();
+
   const response = await request(app)
+    .post("/api/events/")
+    .set("Cookie", cookie)
+    .send({
+      date: "2017-06-01",
+      title: "event title",
+      description: "some content",
+    })
+    .expect(401);
+
+  const response2 = await request(app)
     .post("/api/events/")
     .send({
       date: "2017-06-01",
@@ -30,7 +42,7 @@ it("it doesn't allow unsigned in users to create event", async () => {
 });
 
 it("it returns error if input is incorrect or not provided", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const response = await request(app)
     .post("/api/events/")
     .set("Cookie", cookie)

@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import {
   NotFoundError,
 } from "../../services/errors";
-
+import { facultyAuth } from "../../services/middleware";
 import { Event } from "../../models/event";
 
 const router = express.Router();

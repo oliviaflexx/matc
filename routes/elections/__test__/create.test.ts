@@ -2,7 +2,7 @@ import request from "supertest";
 import { app } from "../../../app";
 
 it("returns a 201 on successful election creation", async () => {
-    const cookie = await global.signin();
+    const cookie = await global.adminSignin();
 
     const response = await request(app)
         .post("/api/elections")
@@ -15,8 +15,19 @@ it("returns a 201 on successful election creation", async () => {
 });
 
 it("doesn't allow unauthorized users to create election", async () => {
-    return request(app)
+    await request(app)
       .post("/api/elections/")
+      .send({
+        title: "an election",
+        url: "something.com",
+      })
+      .expect(401);
+
+    const cookie = await global.facultySignin();
+
+    const response = await request(app)
+      .post("/api/elections")
+      .set("Cookie", cookie)
       .send({
         title: "an election",
         url: "something.com",
@@ -25,7 +36,7 @@ it("doesn't allow unauthorized users to create election", async () => {
 });
 
 it("returns created election correctly", async () => {
-    const cookie = await global.signin();
+    const cookie = await global.adminSignin();
 
     const response = await request(app)
       .post("/api/elections")
@@ -40,7 +51,7 @@ it("returns created election correctly", async () => {
     expect(response.body.url).toEqual("something.com");
 });
 it("doesn't allow empty inputs", async () => {
-    const cookie = await global.signin();
+    const cookie = await global.adminSignin();
 
     const response = await request(app)
       .post("/api/elections/")

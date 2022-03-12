@@ -19,8 +19,19 @@ const createAnnouncements = async () => {
 };
 it("returns a 200 and all announcements", async () => {
     await createAnnouncements();
+    const cookie = await global.facultySignin();
+
     const response = await request(app)
       .get(`/api/announcements/`)
+      .set("Cookie", cookie)
       .send()
       .expect(200);
+});
+
+it("doesn't allow unsigned in users to view", async () => {
+  await createAnnouncements();
+  const response = await request(app)
+    .get(`/api/announcements/`)
+    .send()
+    .expect(401);
 });

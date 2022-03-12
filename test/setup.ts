@@ -4,7 +4,8 @@ import request from "supertest";
 import { app } from "../app";
 
  declare global {
-   var signin: () => Promise<string[]>;
+   var adminSignin: () => Promise<string[]>;
+   var facultySignin: () => Promise<string[]>;
  }
 
 let mongo: any;
@@ -37,10 +38,10 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signin = async () => {
+global.adminSignin = async () => {
   const email = "test@test.com";
   const password = "password";
-  const name = "testingUsername";
+  const name = "admin";
 
   const response = await request(app)
     .post("/api/auth/signup")
@@ -48,6 +49,25 @@ global.signin = async () => {
       email,
       password,
       name
+    })
+    .expect(201);
+
+  const cookie = response.get("Set-Cookie");
+
+  return cookie;
+};
+
+global.facultySignin = async () => {
+  const email = "test@test.com";
+  const password = "password";
+  const name = "faculty";
+
+  const response = await request(app)
+    .post("/api/auth/signup")
+    .send({
+      email,
+      password,
+      name,
     })
     .expect(201);
 

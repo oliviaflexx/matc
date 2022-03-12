@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth, authorization } from "../../services/middleware";
+import { validateRequest, requireAuth, adminAuth } from "../../services/middleware";
 import { BadRequestError, NotAuthorizedError, NotFoundError } from "../../services/errors";
 
 import { Event } from "../../models/event";
@@ -11,7 +11,7 @@ const router = express.Router();
 // create new event
 router.post(
   "/api/events/",
-  authorization,
+  adminAuth,
   [
     body("date").notEmpty().withMessage("You must supply a date"),
     body("title").notEmpty().withMessage("You must supply a title"),

@@ -15,11 +15,9 @@ const createEvent = async () => {
 };
 
 it("returns a 200 and the correct event", async () => {
-  const cookie = await global.signin();
   const event = await createEvent();
   const response = await request(app)
     .get(`/api/events/${event.id}`)
-    .set("Cookie", cookie)
     .send()
     .expect(200);
 
@@ -27,10 +25,8 @@ it("returns a 200 and the correct event", async () => {
 });
 
 it("returns 404 if event doesn't exist", async () => {
-  const cookie = await global.signin();
   const response = await request(app)
     .get(`/api/events/${new mongoose.Types.ObjectId().toHexString()}`)
-    .set("Cookie", cookie)
     .send()
     .expect(404);
 });

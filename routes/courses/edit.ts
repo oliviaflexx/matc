@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth, authorization } from "../../services/middleware";
+import { validateRequest, requireAuth, adminAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.put(
   "/api/courses/:id",
-  authorization,
+  adminAuth,
   [
     body("title").notEmpty().withMessage("You must supply a title"),
     body("number").notEmpty().withMessage("You must supply a number"),

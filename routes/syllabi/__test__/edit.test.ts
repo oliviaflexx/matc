@@ -13,7 +13,7 @@ const createSyllabus = async () => {
 };
 
 it("returns a 200 on successful syllabus edit", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const syllabus = await createSyllabus();
 
@@ -40,10 +40,20 @@ it("doesn't allow unauthorized users to edit syllabus", async () => {
       url: "something.com",
     })
     .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .put(`/api/syllabi/${syllabus.id}`)
+    .set("Cookie", cookie)
+    .send({
+      title: "a syllabus 2",
+      url: "something.com",
+    })
+    .expect(401);
 });
 
 it("returns 404 if syllabus doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const response = await request(app)
     .put(`/api/syllabi/${new mongoose.Types.ObjectId().toHexString()}`)
@@ -56,7 +66,7 @@ it("returns 404 if syllabus doesn't exist", async () => {
 });
 
 it("doesn't allow invalid inputs", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
   const syllabus = await createSyllabus();
 
@@ -78,4 +88,3 @@ it("doesn't allow invalid inputs", async () => {
     })
     .expect(400);
 });
-

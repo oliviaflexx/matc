@@ -3,6 +3,8 @@ import { IconButton } from "@mui/material";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import {useState} from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import logo from "./logo.png";
+
 
 const DepartmentHeader = () => {
   const [showNav, setShowNav] = useState(false);
@@ -11,7 +13,9 @@ const DepartmentHeader = () => {
       <>
         <nav className="department">
           <div className="left">
-            <NavLink to="/department">MATC department</NavLink>
+            <NavLink to="/department">
+              <img className="logo" src={logo}></img>
+            </NavLink>
           </div>
           <div className="right">
             <IconButton

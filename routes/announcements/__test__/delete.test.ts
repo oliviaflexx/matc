@@ -16,37 +16,44 @@ const createAnnouncement = async () => {
 };
 
 it("returns a 200 on successful announcement delete", async () => {
-       const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
-       const announcement = await createAnnouncement();
+  const announcement = await createAnnouncement();
 
-       const response = await request(app)
-         .delete(`/api/announcements/${announcement.id}`)
-         .set("Cookie", cookie)
-         .send()
-         .expect(200);
+  const response = await request(app)
+    .delete(`/api/announcements/${announcement.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(200);
 
-       const oldannouncement = await Announcement.findById(announcement.id);
-       expect(oldannouncement).toBeNull();
+  const oldannouncement = await Announcement.findById(announcement.id);
+  expect(oldannouncement).toBeNull();
 });
 
 it("doesn't allow unauthorized users to delete announcement", async () => {
-      const announcement = await createAnnouncement();
+  const announcement = await createAnnouncement();
 
-      const response = await request(app)
-        .delete(`/api/announcements/${announcement.id}`)
-        .send()
-        .expect(401);
+  const response = await request(app)
+    .delete(`/api/announcements/${announcement.id}`)
+    .send()
+    .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .delete(`/api/announcements/${announcement.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(401);
 });
 
 it("returns 404 if announcement doesn't exist", async () => {
-      const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
-      const announcement = await createAnnouncement();
+  const announcement = await createAnnouncement();
 
-      const response = await request(app)
-        .delete(`/api/announcements/${new mongoose.Types.ObjectId().toHexString()}`)
-        .set("Cookie", cookie)
-        .send()
-        .expect(404);
+  const response = await request(app)
+    .delete(`/api/announcements/${new mongoose.Types.ObjectId().toHexString()}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(404);
 });

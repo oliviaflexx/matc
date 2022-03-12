@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, authorization } from "../../services/middleware";
+import { validateRequest, adminAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -16,7 +16,7 @@ const router = express.Router();
 // create new election
 router.post(
   "/api/credentials/",
-  authorization,
+  adminAuth,
   [
     body("title").notEmpty().withMessage("You must supply a title"),
     body("url").notEmpty().withMessage("You must supply a url"),

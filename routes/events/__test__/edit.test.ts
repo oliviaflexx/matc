@@ -15,7 +15,7 @@ const createEvent = async () => {
 };
 
 it("returns a 200 on successful event edit", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const event = await createEvent();
   const response = await request(app)
     .put(`/api/events/${event.id}`)
@@ -40,10 +40,22 @@ it("doesn't allow unauthorized users to edit event", async () => {
       description: "some content 2",
     })
     .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .put(`/api/events/${event.id}`)
+    .set("Cookie", cookie)
+    .send({
+      date: "2017-06-01",
+      title: "event title",
+      description: "some content 2",
+    })
+    .expect(401);
+  
 });
 
 it("returns 404 if event doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const response = await request(app)
     .put(`/api/events/${new mongoose.Types.ObjectId().toHexString()}`)
     .set("Cookie", cookie)
@@ -56,7 +68,7 @@ it("returns 404 if event doesn't exist", async () => {
 });
 
 it("doesn't allow empty field change", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const event = await createEvent();
   const response = await request(app)
     .put(`/api/events/${event.id}`)

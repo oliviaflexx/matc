@@ -1,6 +1,6 @@
 import request from "supertest";
 import { app } from "../../../app";
-import mongoose, { NativeDate } from "mongoose";
+import mongoose from "mongoose";
 import { Event } from "../../../models/event";
 
 const createevent = async () => {
@@ -15,7 +15,7 @@ const createevent = async () => {
 };
 
 it("returns a 200 on successful event delete", async () => {
-       const cookie = await global.signin();
+       const cookie = await global.adminSignin();
 
        const event = await createevent();
 
@@ -36,10 +36,19 @@ it("doesn't allow unauthorized users to delete event", async () => {
         .delete(`/api/events/${event.id}`)
         .send()
         .expect(401);
+
+      const cookie = await global.facultySignin();
+      const event2 = await createevent();
+      const response2 = await request(app)
+        .delete(`/api/events/${event2.id}`)
+        .set("Cookie", cookie)
+        .send()
+        .expect(401);
+      
 });
 
 it("returns 404 if event doesn't exist", async () => {
-      const cookie = await global.signin();
+      const cookie = await global.adminSignin();
 
       const event = await createevent();
 

@@ -16,7 +16,7 @@ const createAnnouncement = async () => {
 };
 
 it("returns a 200 on successful announcement edit", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const announcement = await createAnnouncement();
   const response = await request(app)
     .put(`/api/announcements/${announcement.id}`)
@@ -43,10 +43,22 @@ it("doesn't allow unauthorized users to edit announcement", async () => {
       creator: "dr. felix",
     })
     .expect(401);
+  
+    const cookie = await global.facultySignin();
+    const response2 = await request(app)
+      .put(`/api/announcements/${announcement.id}`)
+      .set("Cookie", cookie)
+      .send({
+        date: "2017-06-01",
+        title: "announcement title",
+        content: "some content",
+        creator: "dr. felix",
+      })
+      .expect(401);
 });
 
 it("returns 404 if announcement doesn't exist", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const response = await request(app)
     .put(`/api/announcements/${new mongoose.Types.ObjectId().toHexString()}`)
     .set("Cookie", cookie)
@@ -60,7 +72,7 @@ it("returns 404 if announcement doesn't exist", async () => {
 });
 
 it("doesn't allow empty field change", async () => {
-  const cookie = await global.signin();
+  const cookie = await global.adminSignin();
   const announcement = await createAnnouncement();
   const response = await request(app)
     .put(`/api/announcements/${announcement.id}`)

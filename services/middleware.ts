@@ -39,7 +39,7 @@ export const currentUser = (
 export const requireAuth = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   if (!req.currentUser) {
     throw new NotAuthorizedError();
@@ -62,13 +62,38 @@ export const validateRequest = (
   next();
 };
 
-export const authorization = (req: Request, res: Response, next: NextFunction) => {
+export const adminAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const token = req.cookies.access_token;
   if (!token) {
     throw new NotAuthorizedError();
   }
   try {
-    const data = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;;
+    const data = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
+    req.currentUser = data;
+    if (req.currentUser.name !== "admin") {
+      throw new NotAuthorizedError();
+    }
+    return next();
+  } catch {
+    throw new NotAuthorizedError();
+  }
+};
+
+export const facultyAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const token = req.cookies.access_token;
+  if (!token) {
+    throw new NotAuthorizedError();
+  }
+  try {
+    const data = jwt.verify(token, process.env.JWT_KEY!) as UserPayload;
     req.currentUser = data;
     return next();
   } catch {

@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest, requireAuth } from "../../services/middleware";
+import { validateRequest, facultyAuth } from "../../services/middleware";
 import {
   BadRequestError,
   NotAuthorizedError,
@@ -15,6 +15,7 @@ const router = express.Router();
 // show new meeting
 router.get(
   "/api/meetings/:id",
+  facultyAuth,
   async (req: Request, res: Response) => {
     const { id } = req.params;
 

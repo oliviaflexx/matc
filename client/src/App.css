@@ -1,6 +1,6 @@
 main {
   padding: 2rem;
-  margin-top: 4rem;
+  margin-top: 6rem;
 }
 
 h1 {
@@ -119,6 +119,8 @@ main.home {
       display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+  background-repeat: no-repeat;
+
 }
 div.home {
   display: flex;
@@ -133,21 +135,23 @@ div.home a {
   all: unset;
   cursor: pointer;
   width: 20%;
-  border: solid 5px grey;
+  border: solid 5px #f89728;
+  color: black;
   border-radius: .25rem;
   height: 10rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 1rem;
-  font-size: large;
+  font-size: x-large;
+  background-color: #f8972873;
 }
 
 @media screen and (max-width: 1000px) {
   div.home a {
   width: 40%;
-  border: solid 5px grey;
-  border-radius: .25rem;
+  /* border: solid 5px grey; */
+  /* border-radius: .25rem; */
   height: 8rem;
 }
 
@@ -163,7 +167,6 @@ main.home h1 {
 }
 div.home a {
   width: 80%;
-  border: solid 5px grey;
   border-radius: .25rem;
   height: 8rem;
 }
@@ -333,4 +336,12 @@ main.course {
 #bottom {
   position: absolute;
   bottom: 1px;
+}
+
+.orange {
+  color: #f89728;
+}
+
+.logo {
+  width: 60px;
 }

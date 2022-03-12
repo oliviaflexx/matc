@@ -4,7 +4,7 @@ import mongoose, { NativeDate } from "mongoose";
 import { Meeting } from "../../../models/meeting";
 
 const createMeeting = async () => {
-    const date = new Date("2017-06-01");
+  const date = new Date("2017-06-01");
   const meeting = Meeting.build({
     date: date,
     minutes: "google.docs.com",
@@ -16,37 +16,44 @@ const createMeeting = async () => {
 };
 
 it("returns a 200 on successful meeting delete", async () => {
-       const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
-       const meeting = await createMeeting();
+  const meeting = await createMeeting();
 
-       const response = await request(app)
-         .delete(`/api/meetings/${meeting.id}`)
-         .set("Cookie", cookie)
-         .send()
-         .expect(200);
+  const response = await request(app)
+    .delete(`/api/meetings/${meeting.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(200);
 
-       const oldMeeting = await Meeting.findById(meeting.id);
-       expect(oldMeeting).toBeNull();
+  const oldMeeting = await Meeting.findById(meeting.id);
+  expect(oldMeeting).toBeNull();
 });
 
 it("doesn't allow unauthorized users to delete meeting", async () => {
-      const meeting = await createMeeting();
+  const meeting = await createMeeting();
 
-      const response = await request(app)
-        .delete(`/api/meetings/${meeting.id}`)
-        .send()
-        .expect(401);
+  const response = await request(app)
+    .delete(`/api/meetings/${meeting.id}`)
+    .send()
+    .expect(401);
+
+  const cookie = await global.facultySignin();
+  const response2 = await request(app)
+    .delete(`/api/meetings/${meeting.id}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(401);
 });
 
 it("returns 404 if meeting doesn't exist", async () => {
-      const cookie = await global.signin();
+  const cookie = await global.adminSignin();
 
-      const meeting = await createMeeting();
+  const meeting = await createMeeting();
 
-      const response = await request(app)
-        .delete(`/api/meetings/${new mongoose.Types.ObjectId().toHexString()}`)
-        .set("Cookie", cookie)
-        .send()
-        .expect(404);
+  const response = await request(app)
+    .delete(`/api/meetings/${new mongoose.Types.ObjectId().toHexString()}`)
+    .set("Cookie", cookie)
+    .send()
+    .expect(404);
 });
